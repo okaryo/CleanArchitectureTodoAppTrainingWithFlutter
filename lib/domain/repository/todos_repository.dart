@@ -9,5 +9,11 @@ abstract class TodosRepository {
     final bool isCompleted,
     final DateTime date,
   );
+  Future<Todo> updateTodo(
+    final String title,
+    final String description,
+    final bool isCompleted,
+    final DateTime date,
+  );
   Future<void> deleteTodo();
 }
