@@ -24,6 +24,7 @@ dependencies:
   flutter:
     sdk: flutter
   freezed_annotation: ^0.14.2
+  dain: ^0.1.2
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
