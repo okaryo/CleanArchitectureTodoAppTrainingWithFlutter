@@ -1,6 +1,12 @@
+import 'package:clean_architecture_todo_app/data/data_module.dart';
+import 'package:dain/dain.dart';
 import 'package:flutter/material.dart';
 
 void main() {
+  Dain.start([
+    DataModule(),
+  ]);
+
   runApp(MyApp());
 }
 
