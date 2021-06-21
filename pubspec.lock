@@ -162,6 +162,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.3"
+  dain:
+    dependency: "direct main"
+    description:
+      name: dain
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.2"
   dart_style:
     dependency: transitive
     description:
