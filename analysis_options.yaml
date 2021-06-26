@@ -1,0 +1,57 @@
+analyzer:
+  exclude:
+    - test/**.dart
+    - '**/*.freezed.dart'
+  errors:
+    missing_required_param: warning
+    missing_return: warning
+linter:
+  rules:
+    - avoid_empty_else
+    - avoid_init_to_null
+    - avoid_relative_lib_imports
+    - avoid_return_types_on_setters
+    - avoid_shadowing_type_parameters
+    - avoid_types_as_parameter_names
+    - avoid_void_async
+    - await_only_futures
+    - camel_case_types
+    - cancel_subscriptions
+    - close_sinks
+    - constant_identifier_names
+    - control_flow_in_finally
+    - curly_braces_in_flow_control_structures
+    - empty_catches
+    - empty_constructor_bodies
+    - empty_statements
+    - hash_and_equals
+    - implementation_imports
+    - library_names
+    - library_prefixes
+    - non_constant_identifier_names
+    - no_duplicate_case_values
+    - null_closures
+    - package_api_docs
+    - package_names
+    - package_prefixed_library_names
+    - prefer_contains
+    - prefer_const_constructors
+    - prefer_const_literals_to_create_immutables
+    - prefer_equal_for_default_values
+    - prefer_is_empty
+    - prefer_is_not_empty
+    - prefer_iterable_whereType
+    - recursive_getters
+    - slash_for_doc_comments
+    - test_types_in_equals
+    - throw_in_finally
+    - type_init_formals
+    - unawaited_futures
+    - unnecessary_brace_in_string_interps
+    - unnecessary_const
+    - unnecessary_getters_setters
+    - unnecessary_new
+    - unnecessary_null_in_if_null_operators
+    - unnecessary_statements
+    - unrelated_type_equality_checks
+    - valid_regexps
