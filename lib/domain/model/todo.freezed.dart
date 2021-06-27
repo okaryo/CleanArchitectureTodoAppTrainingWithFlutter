@@ -17,11 +17,13 @@ class _$TodoTearOff {
   const _$TodoTearOff();
 
   _Todo call(
-      {required String title,
+      {required TodoId id,
+      required String title,
       required String description,
       required bool isCompleted,
       required DateTime date}) {
     return _Todo(
+      id: id,
       title: title,
       description: description,
       isCompleted: isCompleted,
@@ -35,6 +37,7 @@ const $Todo = _$TodoTearOff();
 
 /// @nodoc
 mixin _$Todo {
+  TodoId get id => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
   String get description => throw _privateConstructorUsedError;
   bool get isCompleted => throw _privateConstructorUsedError;
@@ -49,7 +52,13 @@ abstract class $TodoCopyWith<$Res> {
   factory $TodoCopyWith(Todo value, $Res Function(Todo) then) =
       _$TodoCopyWithImpl<$Res>;
   $Res call(
-      {String title, String description, bool isCompleted, DateTime date});
+      {TodoId id,
+      String title,
+      String description,
+      bool isCompleted,
+      DateTime date});
+
+  $TodoIdCopyWith<$Res> get id;
 }
 
 /// @nodoc
@@ -62,12 +71,17 @@ class _$TodoCopyWithImpl<$Res> implements $TodoCopyWith<$Res> {
 
   @override
   $Res call({
+    Object? id = freezed,
     Object? title = freezed,
     Object? description = freezed,
     Object? isCompleted = freezed,
     Object? date = freezed,
   }) {
     return _then(_value.copyWith(
+      id: id == freezed
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as TodoId,
       title: title == freezed
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
@@ -86,6 +100,13 @@ class _$TodoCopyWithImpl<$Res> implements $TodoCopyWith<$Res> {
               as DateTime,
     ));
   }
+
+  @override
+  $TodoIdCopyWith<$Res> get id {
+    return $TodoIdCopyWith<$Res>(_value.id, (value) {
+      return _then(_value.copyWith(id: value));
+    });
+  }
 }
 
 /// @nodoc
@@ -94,7 +115,14 @@ abstract class _$TodoCopyWith<$Res> implements $TodoCopyWith<$Res> {
       __$TodoCopyWithImpl<$Res>;
   @override
   $Res call(
-      {String title, String description, bool isCompleted, DateTime date});
+      {TodoId id,
+      String title,
+      String description,
+      bool isCompleted,
+      DateTime date});
+
+  @override
+  $TodoIdCopyWith<$Res> get id;
 }
 
 /// @nodoc
@@ -108,12 +136,17 @@ class __$TodoCopyWithImpl<$Res> extends _$TodoCopyWithImpl<$Res>
 
   @override
   $Res call({
+    Object? id = freezed,
     Object? title = freezed,
     Object? description = freezed,
     Object? isCompleted = freezed,
     Object? date = freezed,
   }) {
     return _then(_Todo(
+      id: id == freezed
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as TodoId,
       title: title == freezed
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
@@ -138,11 +171,14 @@ class __$TodoCopyWithImpl<$Res> extends _$TodoCopyWithImpl<$Res>
 
 class _$_Todo implements _Todo {
   const _$_Todo(
-      {required this.title,
+      {required this.id,
+      required this.title,
       required this.description,
       required this.isCompleted,
       required this.date});
 
+  @override
+  final TodoId id;
   @override
   final String title;
   @override
@@ -154,13 +190,15 @@ class _$_Todo implements _Todo {
 
   @override
   String toString() {
-    return 'Todo(title: $title, description: $description, isCompleted: $isCompleted, date: $date)';
+    return 'Todo(id: $id, title: $title, description: $description, isCompleted: $isCompleted, date: $date)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other is _Todo &&
+            (identical(other.id, id) ||
+                const DeepCollectionEquality().equals(other.id, id)) &&
             (identical(other.title, title) ||
                 const DeepCollectionEquality().equals(other.title, title)) &&
             (identical(other.description, description) ||
@@ -176,6 +214,7 @@ class _$_Todo implements _Todo {
   @override
   int get hashCode =>
       runtimeType.hashCode ^
+      const DeepCollectionEquality().hash(id) ^
       const DeepCollectionEquality().hash(title) ^
       const DeepCollectionEquality().hash(description) ^
       const DeepCollectionEquality().hash(isCompleted) ^
@@ -189,11 +228,14 @@ class _$_Todo implements _Todo {
 
 abstract class _Todo implements Todo {
   const factory _Todo(
-      {required String title,
+      {required TodoId id,
+      required String title,
       required String description,
       required bool isCompleted,
       required DateTime date}) = _$_Todo;
 
+  @override
+  TodoId get id => throw _privateConstructorUsedError;
   @override
   String get title => throw _privateConstructorUsedError;
   @override
