@@ -1,9 +1,11 @@
 import 'package:clean_architecture_todo_app/data/data_module.dart';
+import 'package:clean_architecture_todo_app/domain/domain_module.dart';
 import 'package:dain/dain.dart';
 import 'package:flutter/material.dart';
 
 void main() {
   Dain.start([
+    DomainModule(),
     DataModule(),
   ]);
 
