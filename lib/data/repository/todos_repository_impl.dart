@@ -36,14 +36,14 @@ class TodosRepositoryImpl implements TodosRepository {
 
   @override
   Future<void> updateTodo(
-    final int id,
+    final TodoId id,
     final String title,
     final String description,
     final bool isCompleted,
     final DateTime date,
   ) async {
     final todo = Todo(
-      id: TodoId(value: id),
+      id: id,
       title: title,
       description: description,
       isCompleted: isCompleted,
@@ -53,5 +53,6 @@ class TodosRepositoryImpl implements TodosRepository {
   }
 
   @override
-  Future<void> deleteTodo(final int id) async => await database.deleteTodo(id);
+  Future<void> deleteTodo(final TodoId id) async =>
+      await database.deleteTodo(id.value);
 }

@@ -89,7 +89,7 @@ void main() {
 
     test('should return void', () async {
       await _repository.updateTodo(
-          1, 'new title', 'new description', true, _date);
+          const TodoId(value: 1), 'new title', 'new description', true, _date);
       verify(_database.updateTodo(
         {
           'id': 1,
@@ -108,7 +108,7 @@ void main() {
     });
 
     test('should return void', () async {
-      await _repository.deleteTodo(1);
+      await _repository.deleteTodo(const TodoId(value: 1));
       verify(_database.deleteTodo(1)).called(1);
     });
   });
