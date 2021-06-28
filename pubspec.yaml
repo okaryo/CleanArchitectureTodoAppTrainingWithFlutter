@@ -14,6 +14,7 @@ dependencies:
   cupertino_icons: ^1.0.0
   dain: ^0.1.2
   freezed_annotation: ^0.14.2
+  rxdart: ^0.27.1
   sqflite: ^2.0.0+3
 
 dev_dependencies:
