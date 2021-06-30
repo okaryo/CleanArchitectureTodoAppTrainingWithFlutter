@@ -29,7 +29,7 @@ class TodosRepositoryImpl implements TodosRepository {
       title: title,
       description: description,
       isCompleted: isCompleted,
-      date: date,
+      dueDate: date,
     );
     await database.insertTodo(TodoMapper.transformToMap(newTodo));
   }
@@ -47,7 +47,7 @@ class TodosRepositoryImpl implements TodosRepository {
       title: title,
       description: description,
       isCompleted: isCompleted,
-      date: date,
+      dueDate: date,
     );
     await database.updateTodo(TodoMapper.transformToMap(todo));
   }

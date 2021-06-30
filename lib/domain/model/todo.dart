@@ -10,6 +10,6 @@ class Todo with _$Todo {
     required String title,
     required String description,
     required bool isCompleted,
-    required DateTime date,
+    required DateTime dueDate,
   }) = _Todo;
 }
