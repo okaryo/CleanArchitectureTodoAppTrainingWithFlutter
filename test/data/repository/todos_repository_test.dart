@@ -24,7 +24,7 @@ void main() {
               'title': 'title',
               'description': 'description',
               'is_completed': 0,
-              'date': _date.toIso8601String(),
+              'due_date': _date.toIso8601String(),
             },
           ]);
     });
@@ -38,7 +38,7 @@ void main() {
             title: 'title',
             description: 'description',
             isCompleted: false,
-            date: _date,
+            dueDate: _date,
           ),
         ],
       );
@@ -55,7 +55,7 @@ void main() {
           'title': 'title',
           'description': 'description',
           'is_completed': 0,
-          'date': _date.toIso8601String(),
+          'due_date': _date.toIso8601String(),
         },
       )).thenAnswer((_) async => null);
     });
@@ -68,7 +68,7 @@ void main() {
           'title': 'title',
           'description': 'description',
           'is_completed': 0,
-          'date': _date.toIso8601String(),
+          'due_date': _date.toIso8601String(),
         },
       )).called(1);
     });
@@ -82,7 +82,7 @@ void main() {
           'title': 'new title',
           'description': 'new description',
           'is_completed': 1,
-          'date': _date.toIso8601String(),
+          'due_date': _date.toIso8601String(),
         },
       )).thenAnswer((_) async => null);
     });
@@ -96,7 +96,7 @@ void main() {
           'title': 'new title',
           'description': 'new description',
           'is_completed': 1,
-          'date': _date.toIso8601String(),
+          'due_date': _date.toIso8601String(),
         },
       )).called(1);
     });

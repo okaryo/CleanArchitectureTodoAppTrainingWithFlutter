@@ -25,7 +25,7 @@ void main() {
               title: 'title',
               description: 'description',
               isCompleted: false,
-              date: _date),
+              dueDate: _date),
         ],
       ),
     );
@@ -39,7 +39,7 @@ void main() {
             title: 'title',
             description: 'description',
             isCompleted: false,
-            date: _date),
+            dueDate: _date),
       ],
     );
     final actual = await _usecase.execute();

@@ -9,7 +9,7 @@ class TodoMapper {
       title: entity['title'],
       description: entity['description'],
       isCompleted: entity['is_completed'] == 1,
-      date: DateTime.parse(entity['date']),
+      dueDate: DateTime.parse(entity['due_date']),
     );
   }
 
@@ -19,7 +19,7 @@ class TodoMapper {
       'title': model.title,
       'description': model.description,
       'is_completed': model.isCompleted ? 1 : 0,
-      'date': model.date.toIso8601String(),
+      'due_date': model.dueDate.toIso8601String(),
     };
   }
 }

@@ -21,13 +21,13 @@ class _$TodoTearOff {
       required String title,
       required String description,
       required bool isCompleted,
-      required DateTime date}) {
+      required DateTime dueDate}) {
     return _Todo(
       id: id,
       title: title,
       description: description,
       isCompleted: isCompleted,
-      date: date,
+      dueDate: dueDate,
     );
   }
 }
@@ -41,7 +41,7 @@ mixin _$Todo {
   String get title => throw _privateConstructorUsedError;
   String get description => throw _privateConstructorUsedError;
   bool get isCompleted => throw _privateConstructorUsedError;
-  DateTime get date => throw _privateConstructorUsedError;
+  DateTime get dueDate => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $TodoCopyWith<Todo> get copyWith => throw _privateConstructorUsedError;
@@ -56,7 +56,7 @@ abstract class $TodoCopyWith<$Res> {
       String title,
       String description,
       bool isCompleted,
-      DateTime date});
+      DateTime dueDate});
 
   $TodoIdCopyWith<$Res> get id;
 }
@@ -75,7 +75,7 @@ class _$TodoCopyWithImpl<$Res> implements $TodoCopyWith<$Res> {
     Object? title = freezed,
     Object? description = freezed,
     Object? isCompleted = freezed,
-    Object? date = freezed,
+    Object? dueDate = freezed,
   }) {
     return _then(_value.copyWith(
       id: id == freezed
@@ -94,9 +94,9 @@ class _$TodoCopyWithImpl<$Res> implements $TodoCopyWith<$Res> {
           ? _value.isCompleted
           : isCompleted // ignore: cast_nullable_to_non_nullable
               as bool,
-      date: date == freezed
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
+      dueDate: dueDate == freezed
+          ? _value.dueDate
+          : dueDate // ignore: cast_nullable_to_non_nullable
               as DateTime,
     ));
   }
@@ -119,7 +119,7 @@ abstract class _$TodoCopyWith<$Res> implements $TodoCopyWith<$Res> {
       String title,
       String description,
       bool isCompleted,
-      DateTime date});
+      DateTime dueDate});
 
   @override
   $TodoIdCopyWith<$Res> get id;
@@ -140,7 +140,7 @@ class __$TodoCopyWithImpl<$Res> extends _$TodoCopyWithImpl<$Res>
     Object? title = freezed,
     Object? description = freezed,
     Object? isCompleted = freezed,
-    Object? date = freezed,
+    Object? dueDate = freezed,
   }) {
     return _then(_Todo(
       id: id == freezed
@@ -159,9 +159,9 @@ class __$TodoCopyWithImpl<$Res> extends _$TodoCopyWithImpl<$Res>
           ? _value.isCompleted
           : isCompleted // ignore: cast_nullable_to_non_nullable
               as bool,
-      date: date == freezed
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
+      dueDate: dueDate == freezed
+          ? _value.dueDate
+          : dueDate // ignore: cast_nullable_to_non_nullable
               as DateTime,
     ));
   }
@@ -175,7 +175,7 @@ class _$_Todo implements _Todo {
       required this.title,
       required this.description,
       required this.isCompleted,
-      required this.date});
+      required this.dueDate});
 
   @override
   final TodoId id;
@@ -186,11 +186,11 @@ class _$_Todo implements _Todo {
   @override
   final bool isCompleted;
   @override
-  final DateTime date;
+  final DateTime dueDate;
 
   @override
   String toString() {
-    return 'Todo(id: $id, title: $title, description: $description, isCompleted: $isCompleted, date: $date)';
+    return 'Todo(id: $id, title: $title, description: $description, isCompleted: $isCompleted, dueDate: $dueDate)';
   }
 
   @override
@@ -207,8 +207,8 @@ class _$_Todo implements _Todo {
             (identical(other.isCompleted, isCompleted) ||
                 const DeepCollectionEquality()
                     .equals(other.isCompleted, isCompleted)) &&
-            (identical(other.date, date) ||
-                const DeepCollectionEquality().equals(other.date, date)));
+            (identical(other.dueDate, dueDate) ||
+                const DeepCollectionEquality().equals(other.dueDate, dueDate)));
   }
 
   @override
@@ -218,7 +218,7 @@ class _$_Todo implements _Todo {
       const DeepCollectionEquality().hash(title) ^
       const DeepCollectionEquality().hash(description) ^
       const DeepCollectionEquality().hash(isCompleted) ^
-      const DeepCollectionEquality().hash(date);
+      const DeepCollectionEquality().hash(dueDate);
 
   @JsonKey(ignore: true)
   @override
@@ -232,7 +232,7 @@ abstract class _Todo implements Todo {
       required String title,
       required String description,
       required bool isCompleted,
-      required DateTime date}) = _$_Todo;
+      required DateTime dueDate}) = _$_Todo;
 
   @override
   TodoId get id => throw _privateConstructorUsedError;
@@ -243,7 +243,7 @@ abstract class _Todo implements Todo {
   @override
   bool get isCompleted => throw _privateConstructorUsedError;
   @override
-  DateTime get date => throw _privateConstructorUsedError;
+  DateTime get dueDate => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
   _$TodoCopyWith<_Todo> get copyWith => throw _privateConstructorUsedError;
