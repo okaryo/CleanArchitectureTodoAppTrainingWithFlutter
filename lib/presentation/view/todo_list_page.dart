@@ -2,7 +2,7 @@ import 'package:clean_architecture_todo_app/domain/model/todo.dart';
 import 'package:clean_architecture_todo_app/domain/model/todo_id.dart';
 import 'package:clean_architecture_todo_app/domain/model/todo_list.dart';
 import 'package:clean_architecture_todo_app/presentation/viewmodel/todolist/todo_list_state.dart';
-import 'package:clean_architecture_todo_app/presentation/viewmodel/todolist/todo_list_view_model.dart';
+import 'package:clean_architecture_todo_app/presentation/viewmodel/todolist/todo_list_viewmodel.dart';
 import 'package:dain/dain.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
