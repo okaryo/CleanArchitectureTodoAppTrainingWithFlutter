@@ -6,7 +6,7 @@ class PresentationModule extends Module {
   @override
   List<Bean> register() {
     return [
-      factory<TodoListViewModel>(() => TodoListViewModel(get())),
+      factory<TodoListViewModel>(() => TodoListViewModel(get(), get())),
     ];
   }
 }

@@ -1,6 +1,5 @@
 analyzer:
   exclude:
-    - test/**.dart
     - '**/*.freezed.dart'
   errors:
     missing_required_param: warning

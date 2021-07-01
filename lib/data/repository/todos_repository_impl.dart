@@ -22,14 +22,14 @@ class TodosRepositoryImpl implements TodosRepository {
     final String title,
     final String description,
     final bool isCompleted,
-    final DateTime date,
+    final DateTime dueDate,
   ) async {
     final newTodo = Todo(
       id: const TodoId(value: 0),
       title: title,
       description: description,
       isCompleted: isCompleted,
-      dueDate: date,
+      dueDate: dueDate,
     );
     await database.insertTodo(TodoMapper.transformToMap(newTodo));
   }
@@ -40,19 +40,18 @@ class TodosRepositoryImpl implements TodosRepository {
     final String title,
     final String description,
     final bool isCompleted,
-    final DateTime date,
+    final DateTime dueDate,
   ) async {
     final todo = Todo(
       id: id,
       title: title,
       description: description,
       isCompleted: isCompleted,
-      dueDate: date,
+      dueDate: dueDate,
     );
     await database.updateTodo(TodoMapper.transformToMap(todo));
   }
 
   @override
-  Future<void> deleteTodo(final TodoId id) async =>
-      await database.deleteTodo(id.value);
+  Future<void> deleteTodo(final TodoId id) async => await database.deleteTodo(id.value);
 }

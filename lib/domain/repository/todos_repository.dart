@@ -7,14 +7,14 @@ abstract class TodosRepository {
     final String title,
     final String description,
     final bool isCompleted,
-    final DateTime date,
+    final DateTime dueDate,
   );
   Future<void> updateTodo(
     final TodoId id,
     final String title,
     final String description,
     final bool isCompleted,
-    final DateTime date,
+    final DateTime dueDate,
   );
   Future<void> deleteTodo(final TodoId id);
 }

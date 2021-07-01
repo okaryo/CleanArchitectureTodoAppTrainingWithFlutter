@@ -12,12 +12,11 @@ class TodosDatabaseImpl implements TodosDatabase {
   static const _columnDescription = 'description';
   static const _columnIsCompleted = 'is_completed';
   static const _columnDate = 'date';
-  late Database _database;
+  static Database? _database;
 
   Future<Database> get database async {
-    if (_database != null) return _database;
-    _database = await _initDatabase();
-    return _database;
+    if (_database == null) _database = await _initDatabase();
+    return _database!;
   }
 
   Future<TodoListEntity> allTodos() async {

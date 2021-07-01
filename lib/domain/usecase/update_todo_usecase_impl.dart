@@ -9,12 +9,12 @@ class UpdateTodoUseCaseImpl implements UpdateTodoUseCase {
 
   @override
   Future<void> execute(
-    TodoId id,
-    String title,
-    String description,
-    bool isCompleted,
-    DateTime date,
+    final TodoId id,
+    final String title,
+    final String description,
+    final bool isCompleted,
+    final DateTime dueDate,
   ) {
-    return _repository.updateTodo(id, title, description, isCompleted, date);
+    return _repository.updateTodo(id, title, description, isCompleted, dueDate);
   }
 }
