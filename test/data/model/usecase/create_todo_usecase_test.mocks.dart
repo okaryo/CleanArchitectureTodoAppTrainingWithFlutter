@@ -33,18 +33,18 @@ class MockTodosRepository extends _i1.Mock implements _i3.TodosRepository {
           as _i4.Future<_i2.TodoList>);
   @override
   _i4.Future<void> createTodo(String? title, String? description,
-          bool? isCompleted, DateTime? date) =>
+          bool? isCompleted, DateTime? dueDate) =>
       (super.noSuchMethod(
           Invocation.method(
-              #createTodo, [title, description, isCompleted, date]),
+              #createTodo, [title, description, isCompleted, dueDate]),
           returnValue: Future<void>.value(),
           returnValueForMissingStub: Future.value()) as _i4.Future<void>);
   @override
   _i4.Future<void> updateTodo(_i5.TodoId? id, String? title,
-          String? description, bool? isCompleted, DateTime? date) =>
+          String? description, bool? isCompleted, DateTime? dueDate) =>
       (super.noSuchMethod(
           Invocation.method(
-              #updateTodo, [id, title, description, isCompleted, date]),
+              #updateTodo, [id, title, description, isCompleted, dueDate]),
           returnValue: Future<void>.value(),
           returnValueForMissingStub: Future.value()) as _i4.Future<void>);
   @override

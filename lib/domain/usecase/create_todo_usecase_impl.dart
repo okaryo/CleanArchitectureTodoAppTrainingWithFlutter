@@ -11,8 +11,8 @@ class CreateTodoUseCaseImpl implements CreateTodoUseCase {
     String title,
     String description,
     bool isCompleted,
-    DateTime date,
+    DateTime dueDate,
   ) {
-    return _repository.createTodo(title, description, isCompleted, date);
+    return _repository.createTodo(title, description, isCompleted, dueDate);
   }
 }

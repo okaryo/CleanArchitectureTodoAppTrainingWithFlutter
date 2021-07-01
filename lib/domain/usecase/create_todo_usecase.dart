@@ -3,6 +3,6 @@ abstract class CreateTodoUseCase {
     final String title,
     final String description,
     final bool isCompleted,
-    final DateTime date,
+    final DateTime dueDate,
   );
 }
