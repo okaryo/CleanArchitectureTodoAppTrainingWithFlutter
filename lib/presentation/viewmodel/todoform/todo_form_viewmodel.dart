@@ -1,11 +1,13 @@
 import 'package:clean_architecture_todo_app/domain/model/todo.dart';
 import 'package:clean_architecture_todo_app/domain/model/todo_id.dart';
 import 'package:clean_architecture_todo_app/domain/usecase/create_todo_usecase.dart';
+import 'package:clean_architecture_todo_app/domain/usecase/delete_todo_usecase.dart';
 import 'package:clean_architecture_todo_app/domain/usecase/update_todo_usecase.dart';
 
 class TodoFormViewModel {
   final CreateTodoUseCase _createTodoUseCase;
   final UpdateTodoUseCase _updateTodoUseCase;
+  final DeleteTodoUseCase _deleteTodoUseCase;
   late TodoId _id;
   var _title = '';
   var _description = '';
@@ -13,7 +15,11 @@ class TodoFormViewModel {
   var _dueDate = DateTime.now();
   var _isNewTodo = false;
 
-  TodoFormViewModel(this._createTodoUseCase, this._updateTodoUseCase);
+  TodoFormViewModel(
+    this._createTodoUseCase,
+    this._updateTodoUseCase,
+    this._deleteTodoUseCase,
+  );
 
   initTodo(final Todo? todo) {
     if (todo == null) {
@@ -33,6 +39,10 @@ class TodoFormViewModel {
     } else {
       await _updateTodoUseCase.execute(_id, _title, _description, _isCompleted, _dueDate);
     }
+  }
+
+  deleteTodo() async {
+    if (!_isNewTodo) await _deleteTodoUseCase.execute(_id);
   }
 
   setTitle(final String value) => _title = value;
