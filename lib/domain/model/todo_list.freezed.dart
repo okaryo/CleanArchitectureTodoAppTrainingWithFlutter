@@ -95,8 +95,8 @@ class __$TodoListCopyWithImpl<$Res> extends _$TodoListCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_TodoList implements _TodoList {
-  const _$_TodoList({required this.values});
+class _$_TodoList extends _TodoList {
+  const _$_TodoList({required this.values}) : super._();
 
   @override
   final List<Todo> values;
@@ -124,8 +124,9 @@ class _$_TodoList implements _TodoList {
       __$TodoListCopyWithImpl<_TodoList>(this, _$identity);
 }
 
-abstract class _TodoList implements TodoList {
+abstract class _TodoList extends TodoList {
   const factory _TodoList({required List<Todo> values}) = _$_TodoList;
+  const _TodoList._() : super._();
 
   @override
   List<Todo> get values => throw _privateConstructorUsedError;

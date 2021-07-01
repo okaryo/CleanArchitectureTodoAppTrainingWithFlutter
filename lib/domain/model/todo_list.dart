@@ -6,4 +6,10 @@ part 'todo_list.freezed.dart';
 @freezed
 class TodoList with _$TodoList {
   const factory TodoList({required List<Todo> values}) = _TodoList;
+
+  const TodoList._();
+
+  operator [](final int index) => values[index];
+
+  int get length => values.length;
 }
