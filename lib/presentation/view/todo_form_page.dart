@@ -140,10 +140,7 @@ class _TodoFormPageState extends State<TodoFormPage> {
 
   Widget _buildDeleteTodoIconWidget() {
     return IconButton(
-      onPressed: () {
-        _viewModel.deleteTodo();
-        Navigator.pop(context);
-      },
+      onPressed: () => _showConfirmDeleteTodoDialog(),
       icon: const Icon(Icons.delete),
     );
   }
@@ -158,6 +155,31 @@ class _TodoFormPageState extends State<TodoFormPage> {
     if (selectedDate != null) {
       _dueDateTextFieldController.text = DateFormat('yyyy/MM/dd').format(selectedDate);
       _viewModel.setDueDate(selectedDate);
+    }
+  }
+
+  _showConfirmDeleteTodoDialog() async {
+    final bool result = await showDialog(
+      context: context,
+      builder: (_) {
+        return AlertDialog(
+          content: const Text('Delete ToDo?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('CANCEL'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text('DELETE'),
+            ),
+          ],
+        );
+      },
+    );
+    if (result) {
+      _viewModel.deleteTodo();
+      Navigator.pop(context);
     }
   }
 }
