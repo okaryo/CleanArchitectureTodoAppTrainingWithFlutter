@@ -45,6 +45,18 @@ class TodoFormViewModel {
     if (!_isNewTodo) await _deleteTodoUseCase.execute(_id);
   }
 
+  String appBarTitle() => _isNewTodo ? 'Add ToDo' : 'Edit ToDo';
+
+  String initialTitleValue() => _title;
+
+  String initialDescriptionValue() => _description;
+
+  DateTime initialDueDateValue() => _dueDate;
+
+  DateTime datePickerFirstDate() => DateTime(DateTime.now().year - 5, 1, 1);
+
+  DateTime datePickerLastDate() => DateTime(DateTime.now().year + 5, 12, 31);
+
   setTitle(final String value) => _title = value;
 
   setDescription(final String value) => _description = value;
