@@ -11,7 +11,7 @@ class TodosDatabaseImpl implements TodosDatabase {
   static const _columnTitle = 'title';
   static const _columnDescription = 'description';
   static const _columnIsCompleted = 'is_completed';
-  static const _columnDate = 'date';
+  static const _columnDueDate = 'due_date';
   static Database? _database;
 
   Future<Database> get database async {
@@ -63,7 +63,7 @@ class TodosDatabaseImpl implements TodosDatabase {
             $_columnTitle TEXT NOT NULL,
             $_columnDescription TEXT,
             $_columnIsCompleted INTEGER NOT NULL,
-            $_columnDate TEXT NOT NULL
+            $_columnDueDate TEXT NOT NULL
           )
         ''');
       },
