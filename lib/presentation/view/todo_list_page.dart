@@ -1,6 +1,6 @@
 import 'package:clean_architecture_todo_app/domain/model/todo.dart';
-import 'package:clean_architecture_todo_app/domain/model/todo_id.dart';
 import 'package:clean_architecture_todo_app/domain/model/todo_list.dart';
+import 'package:clean_architecture_todo_app/presentation/view/todo_form_page.dart';
 import 'package:clean_architecture_todo_app/presentation/viewmodel/todolist/todo_list_state.dart';
 import 'package:clean_architecture_todo_app/presentation/viewmodel/todolist/todo_list_viewmodel.dart';
 import 'package:dain/dain.dart';
@@ -17,7 +17,7 @@ class _TodoListPageState extends State<TodoListPage> {
   final _viewModel = Dain.inject<TodoListViewModel>();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('ToDo App'),
@@ -43,103 +43,85 @@ class _TodoListPageState extends State<TodoListPage> {
   }
 
   Widget _buildTodoListWidget(TodoList todoList) {
-    // FIXME: 仮置き
-    todoList = TodoList(values: [
-      Todo(
-          id: const TodoId(value: 1),
-          title: 'title' * 50,
-          description: 'description',
-          isCompleted: true,
-          dueDate: DateTime.now()),
-      Todo(
-          id: const TodoId(value: 1),
-          title: 'title',
-          description: 'description',
-          isCompleted: false,
-          dueDate: DateTime.now()),
-      Todo(
-          id: const TodoId(value: 1),
-          title: 'title' * 50,
-          description: 'description',
-          isCompleted: true,
-          dueDate: DateTime.now()),
-    ]);
-    return ListView.builder(
-      padding: const EdgeInsets.all(8),
-      itemCount: todoList.length,
-      itemBuilder: (final BuildContext context, final int index) {
-        if (todoList.length == 0) {
-          return const Center(child: Text('No ToDos'));
-        } else {
+    if (todoList.length == 0) {
+      return const Center(child: Text('No ToDo'));
+    } else {
+      return ListView.builder(
+        padding: const EdgeInsets.all(8),
+        itemCount: todoList.length,
+        itemBuilder: (final BuildContext context, final int index) {
           return _buildTodoItemCardWidget(todoList[index]);
-        }
-      },
-    );
+        },
+      );
+    }
   }
 
   Widget _buildTodoItemCardWidget(final Todo todo) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Flexible(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    todo.title,
-                    style: Theme.of(context).textTheme.headline6,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  Text(
-                    DateFormat('yyyy/MM/dd').format(todo.dueDate),
-                    style: Theme.of(context).textTheme.caption,
-                  ),
-                  Text(
-                    todo.description,
-                    style: Theme.of(context).textTheme.bodyText2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
+    return InkWell(
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Flexible(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      todo.title,
+                      style: Theme.of(context).textTheme.headline6,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Text(
+                      DateFormat('yyyy/MM/dd').format(todo.dueDate),
+                      style: Theme.of(context).textTheme.caption,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      todo.description.isEmpty ? 'No Description' : todo.description,
+                      style: Theme.of(context).textTheme.bodyText2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(width: 8),
-            todo.isCompleted ? _buildCheckedIcon(todo) : _buildUncheckedIcon(todo),
-          ],
+              const SizedBox(width: 8),
+              todo.isCompleted ? _buildCheckedIcon(todo) : _buildUncheckedIcon(todo),
+            ],
+          ),
         ),
       ),
+      onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => TodoFormPage(todo),
+          )),
     );
   }
 
   Widget _buildCheckedIcon(final Todo todo) {
-    return GestureDetector(
-      child: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.lightGreen),
-        child: const Icon(Icons.check, size: 12, color: Colors.white),
-      ),
+    return InkWell(
+      child: const Icon(Icons.done, size: 24, color: Colors.lightGreen),
       onTap: () => _viewModel.undoTodo(todo),
     );
   }
 
   Widget _buildUncheckedIcon(final Todo todo) {
-    return GestureDetector(
-      child: Container(
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          border: Border.all(color: Colors.grey, width: 2),
-        ),
-        child: const SizedBox(width: 22, height: 22),
-      ),
-      onTap: () => _viewModel.completeTodo(todo),
+    return InkWell(
+      child: const Icon(Icons.radio_button_off_rounded, size: 24, color: Colors.grey),
+      onTap: () => _viewModel.undoTodo(todo),
     );
   }
 
   Widget _buildFloatingActionButton() {
     return FloatingActionButton(
-      onPressed: () => null,
+      onPressed: () => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => const TodoFormPage(null),
+        ),
+      ),
       child: const Icon(Icons.add),
     );
   }
