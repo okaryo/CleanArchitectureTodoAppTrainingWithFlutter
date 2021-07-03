@@ -57,6 +57,8 @@ class TodoFormViewModel {
 
   DateTime datePickerLastDate() => DateTime(DateTime.now().year + 5, 12, 31);
 
+  bool shouldShowDeleteTodoIcon() => !_isNewTodo;
+
   setTitle(final String value) => _title = value;
 
   setDescription(final String value) => _description = value;

@@ -38,6 +38,9 @@ class _TodoFormPageState extends State<TodoFormPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(_viewModel.appBarTitle()),
+        actions: [
+          if (_viewModel.shouldShowDeleteTodoIcon()) _buildDeleteTodoIconWidget(),
+        ],
       ),
       body: _buildBodyWidget(),
     );
@@ -64,7 +67,7 @@ class _TodoFormPageState extends State<TodoFormPage> {
           final currentState = _formKey.currentState;
           if (currentState != null && currentState.validate()) {
             _viewModel.createOrUpdateTodo();
-            Navigator.of(context).pop();
+            Navigator.pop(context);
           }
         },
         child: const Text('Save'),
@@ -132,6 +135,16 @@ class _TodoFormPageState extends State<TodoFormPage> {
         helperText: 'Required',
         border: OutlineInputBorder(),
       ),
+    );
+  }
+
+  Widget _buildDeleteTodoIconWidget() {
+    return IconButton(
+      onPressed: () {
+        _viewModel.deleteTodo();
+        Navigator.pop(context);
+      },
+      icon: const Icon(Icons.delete),
     );
   }
 
