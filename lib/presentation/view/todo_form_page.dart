@@ -38,6 +38,9 @@ class _TodoFormPageState extends State<TodoFormPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(_viewModel.appBarTitle()),
+        actions: [
+          if (_viewModel.shouldShowDeleteTodoIcon()) _buildDeleteTodoIconWidget(),
+        ],
       ),
       body: _buildBodyWidget(),
     );
@@ -64,7 +67,7 @@ class _TodoFormPageState extends State<TodoFormPage> {
           final currentState = _formKey.currentState;
           if (currentState != null && currentState.validate()) {
             _viewModel.createOrUpdateTodo();
-            Navigator.of(context).pop();
+            Navigator.pop(context);
           }
         },
         child: const Text('Save'),
@@ -135,6 +138,13 @@ class _TodoFormPageState extends State<TodoFormPage> {
     );
   }
 
+  Widget _buildDeleteTodoIconWidget() {
+    return IconButton(
+      onPressed: () => _showConfirmDeleteTodoDialog(),
+      icon: const Icon(Icons.delete),
+    );
+  }
+
   Future<DateTime?> _showDatePicker(final BuildContext context) async {
     final selectedDate = await showDatePicker(
       context: context,
@@ -145,6 +155,31 @@ class _TodoFormPageState extends State<TodoFormPage> {
     if (selectedDate != null) {
       _dueDateTextFieldController.text = DateFormat('yyyy/MM/dd').format(selectedDate);
       _viewModel.setDueDate(selectedDate);
+    }
+  }
+
+  _showConfirmDeleteTodoDialog() async {
+    final bool result = await showDialog(
+      context: context,
+      builder: (_) {
+        return AlertDialog(
+          content: const Text('Delete ToDo?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('CANCEL'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text('DELETE'),
+            ),
+          ],
+        );
+      },
+    );
+    if (result) {
+      _viewModel.deleteTodo();
+      Navigator.pop(context);
     }
   }
 }
