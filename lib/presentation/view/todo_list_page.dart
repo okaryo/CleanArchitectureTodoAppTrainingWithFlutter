@@ -1,48 +1,43 @@
 import 'package:clean_architecture_todo_app/domain/model/todo.dart';
 import 'package:clean_architecture_todo_app/domain/model/todo_list.dart';
+import 'package:clean_architecture_todo_app/presentation/state/state.dart' as state;
+import 'package:clean_architecture_todo_app/presentation/state/todo_list_state_controller.dart';
 import 'package:clean_architecture_todo_app/presentation/view/todo_form_page.dart';
-import 'package:clean_architecture_todo_app/presentation/viewmodel/todolist/todo_list_state.dart';
 import 'package:clean_architecture_todo_app/presentation/viewmodel/todolist/todo_list_viewmodel.dart';
 import 'package:dain/dain.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
-class TodoListPage extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => _TodoListPageState();
-}
-
-class _TodoListPageState extends State<TodoListPage> {
+class TodoListPage extends HookConsumerWidget {
   final _viewModel = Dain.inject<TodoListViewModel>();
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(final BuildContext context, final WidgetRef ref) {
+    final _provider = StateNotifierProvider<TodoListStateController, state.State<TodoList>>(
+      (_) => _viewModel.todoListStateController,
+    );
     return Scaffold(
       appBar: AppBar(
         title: const Text('ToDo App'),
       ),
-      body: StreamBuilder(
-        stream: _viewModel.stateSubject,
-        initialData: const TodoListState.loading(),
-        builder: (
-          final BuildContext context,
-          final AsyncSnapshot<TodoListState> snapshot,
-        ) {
-          return snapshot.data!.when(
-            completed: (todoList) => _buildTodoListWidget(todoList),
-            loading: () => const Center(
-              child: CircularProgressIndicator(),
-            ),
+      body: HookBuilder(
+        builder: (final BuildContext context) {
+          final state = ref.watch(_provider);
+          return state.when(
+            fixed: (content) => _buildTodoListWidget(context, content),
+            loading: () => const Center(child: CircularProgressIndicator()),
             error: (_) => _buildErrorWidget(),
           );
         },
       ),
-      floatingActionButton: _buildFloatingActionButton(),
+      floatingActionButton: _buildFloatingActionButton(context),
     );
   }
 
-  Widget _buildTodoListWidget(TodoList todoList) {
+  Widget _buildTodoListWidget(final BuildContext context, final TodoList todoList) {
     if (todoList.length == 0) {
       return const Center(child: Text('No ToDo'));
     } else {
@@ -50,13 +45,13 @@ class _TodoListPageState extends State<TodoListPage> {
         padding: const EdgeInsets.all(8),
         itemCount: todoList.length,
         itemBuilder: (final BuildContext context, final int index) {
-          return _buildTodoItemCardWidget(todoList[index]);
+          return _buildTodoItemCardWidget(context, todoList[index]);
         },
       );
     }
   }
 
-  Widget _buildTodoItemCardWidget(final Todo todo) {
+  Widget _buildTodoItemCardWidget(final BuildContext context, final Todo todo) {
     return InkWell(
       child: Card(
         child: Padding(
@@ -101,20 +96,22 @@ class _TodoListPageState extends State<TodoListPage> {
   }
 
   Widget _buildCheckedIcon(final Todo todo) {
-    return InkWell(
+    return InkResponse(
       child: const Icon(Icons.done, size: 24, color: Colors.lightGreen),
       onTap: () => _viewModel.undoTodo(todo),
+      splashColor: Colors.transparent,
     );
   }
 
   Widget _buildUncheckedIcon(final Todo todo) {
-    return InkWell(
+    return InkResponse(
       child: const Icon(Icons.radio_button_off_rounded, size: 24, color: Colors.grey),
-      onTap: () => _viewModel.undoTodo(todo),
+      onTap: () => _viewModel.completeTodo(todo),
+      splashColor: Colors.transparent,
     );
   }
 
-  Widget _buildFloatingActionButton() {
+  Widget _buildFloatingActionButton(final BuildContext context) {
     return FloatingActionButton(
       onPressed: () => Navigator.push(
         context,
