@@ -169,13 +169,14 @@ class __$TodoCopyWithImpl<$Res> extends _$TodoCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_Todo implements _Todo {
+class _$_Todo extends _Todo {
   const _$_Todo(
       {required this.id,
       required this.title,
       required this.description,
       required this.isCompleted,
-      required this.dueDate});
+      required this.dueDate})
+      : super._();
 
   @override
   final TodoId id;
@@ -226,13 +227,14 @@ class _$_Todo implements _Todo {
       __$TodoCopyWithImpl<_Todo>(this, _$identity);
 }
 
-abstract class _Todo implements Todo {
+abstract class _Todo extends Todo {
   const factory _Todo(
       {required TodoId id,
       required String title,
       required String description,
       required bool isCompleted,
       required DateTime dueDate}) = _$_Todo;
+  const _Todo._() : super._();
 
   @override
   TodoId get id => throw _privateConstructorUsedError;

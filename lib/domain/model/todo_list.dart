@@ -12,4 +12,12 @@ class TodoList with _$TodoList {
   operator [](final int index) => values[index];
 
   int get length => values.length;
+
+  TodoList addTodo(final Todo todo) => TodoList(values: values..add(todo));
+
+  TodoList updateTodo(final Todo newTodo) {
+    return TodoList(values: values.map((todo) => newTodo.id == todo.id ? newTodo : todo).toList());
+  }
+
+  TodoList removeTodo(final Todo todo) => TodoList(values: values..remove(todo));
 }
