@@ -14,12 +14,12 @@ class TodoListViewModel {
     _todoListStateController.dispose();
   }
 
-  completeTodo(final Todo todo) async {
+  completeTodo(final Todo todo) {
     final newTodo = todo.copyWith(isCompleted: true);
     _todoListStateController.updateTodo(newTodo);
   }
 
-  undoTodo(final Todo todo) async {
+  undoTodo(final Todo todo) {
     final newTodo = todo.copyWith(isCompleted: false);
     _todoListStateController.updateTodo(newTodo);
   }

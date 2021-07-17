@@ -25,7 +25,7 @@ class TodoFormViewModel {
     }
   }
 
-  createOrUpdateTodo() async {
+  createOrUpdateTodo() {
     if (_isNewTodo) {
       _todoListStateController.addTodo(_title, _description, _isCompleted, _dueDate);
     } else {
@@ -40,7 +40,7 @@ class TodoFormViewModel {
     }
   }
 
-  deleteTodo() async {
+  deleteTodo() {
     if (!_isNewTodo) _todoListStateController.deleteTodo(_id);
   }
 
