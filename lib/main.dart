@@ -4,6 +4,7 @@ import 'package:clean_architecture_todo_app/presentation/presentation_module.dar
 import 'package:clean_architecture_todo_app/presentation/view/todo_list_page.dart';
 import 'package:dain/dain.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 void main() {
   Dain.start([
@@ -12,7 +13,11 @@ void main() {
     PresentationModule(),
   ]);
 
-  runApp(MainApp());
+  runApp(
+    ProviderScope(
+      child: MainApp(),
+    ),
+  );
 }
 
 class MainApp extends StatelessWidget {

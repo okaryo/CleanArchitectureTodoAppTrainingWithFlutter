@@ -15,9 +15,12 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.0
   dain: ^0.1.2
+  flutter_hooks: ^0.18.0
   freezed_annotation: ^0.14.2
+  hooks_riverpod: ^1.0.0-dev.5
   rxdart: ^0.27.1
   sqflite: ^2.0.0+3
+  state_notifier: ^0.7.0
 
 dev_dependencies:
   flutter_test:

@@ -1,16 +1,13 @@
-import 'package:clean_architecture_todo_app/data/database/todos_database.dart';
 import 'package:clean_architecture_todo_app/data/repository/todos_repository_impl.dart';
 import 'package:clean_architecture_todo_app/domain/model/todo.dart';
 import 'package:clean_architecture_todo_app/domain/model/todo_id.dart';
 import 'package:clean_architecture_todo_app/domain/model/todo_list.dart';
 import 'package:clean_architecture_todo_app/domain/repository/todos_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import 'todos_repository_test.mocks.dart';
+import '../../mock/data/datasource/database/todos_database_mock.mocks.dart';
 
-@GenerateMocks([TodosDatabase])
 void main() {
   final _database = MockTodosDatabase();
   final TodosRepository _repository = TodosRepositoryImpl(_database);
@@ -88,8 +85,7 @@ void main() {
     });
 
     test('should return void', () async {
-      await _repository.updateTodo(
-          const TodoId(value: 1), 'new title', 'new description', true, _date);
+      await _repository.updateTodo(const TodoId(value: 1), 'new title', 'new description', true, _date);
       verify(_database.updateTodo(
         {
           'id': 1,
