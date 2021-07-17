@@ -1,13 +1,9 @@
 import 'package:clean_architecture_todo_app/domain/model/todo.dart';
 import 'package:clean_architecture_todo_app/domain/model/todo_id.dart';
-import 'package:clean_architecture_todo_app/domain/usecase/create_todo_usecase.dart';
-import 'package:clean_architecture_todo_app/domain/usecase/delete_todo_usecase.dart';
-import 'package:clean_architecture_todo_app/domain/usecase/update_todo_usecase.dart';
+import 'package:clean_architecture_todo_app/presentation/state/todo_list_state_controller.dart';
 
 class TodoFormViewModel {
-  final CreateTodoUseCase _createTodoUseCase;
-  final UpdateTodoUseCase _updateTodoUseCase;
-  final DeleteTodoUseCase _deleteTodoUseCase;
+  final TodoListStateController _todoListStateController;
   late TodoId _id;
   var _title = '';
   var _description = '';
@@ -15,11 +11,7 @@ class TodoFormViewModel {
   var _dueDate = DateTime.now();
   var _isNewTodo = false;
 
-  TodoFormViewModel(
-    this._createTodoUseCase,
-    this._updateTodoUseCase,
-    this._deleteTodoUseCase,
-  );
+  TodoFormViewModel(this._todoListStateController);
 
   initTodo(final Todo? todo) {
     if (todo == null) {
@@ -35,14 +27,21 @@ class TodoFormViewModel {
 
   createOrUpdateTodo() async {
     if (_isNewTodo) {
-      await _createTodoUseCase.execute(_title, _description, _isCompleted, _dueDate);
+      _todoListStateController.addTodo(_title, _description, _isCompleted, _dueDate);
     } else {
-      await _updateTodoUseCase.execute(_id, _title, _description, _isCompleted, _dueDate);
+      final newTodo = Todo(
+        id: _id,
+        title: _title,
+        description: _description,
+        isCompleted: _isCompleted,
+        dueDate: _dueDate,
+      );
+      _todoListStateController.updateTodo(newTodo);
     }
   }
 
   deleteTodo() async {
-    if (!_isNewTodo) await _deleteTodoUseCase.execute(_id);
+    if (!_isNewTodo) _todoListStateController.deleteTodo(_id);
   }
 
   String appBarTitle() => _isNewTodo ? 'Add ToDo' : 'Edit ToDo';
