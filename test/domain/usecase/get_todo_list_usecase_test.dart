@@ -5,12 +5,10 @@ import 'package:clean_architecture_todo_app/domain/repository/todos_repository.d
 import 'package:clean_architecture_todo_app/domain/usecase/get_todo_list_usecase.dart';
 import 'package:clean_architecture_todo_app/domain/usecase/get_todo_list_usecase_impl.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import 'get_todo_list_usecase_test.mocks.dart';
+import '../../mock/domain/repository/todos_repository_mock.mocks.dart';
 
-@GenerateMocks([TodosRepository])
 void main() {
   final TodosRepository _repository = MockTodosRepository();
   final _date = DateTime.now();
@@ -35,11 +33,7 @@ void main() {
     final expected = TodoList(
       values: [
         Todo(
-            id: const TodoId(value: 1),
-            title: 'title',
-            description: 'description',
-            isCompleted: false,
-            dueDate: _date),
+            id: const TodoId(value: 1), title: 'title', description: 'description', isCompleted: false, dueDate: _date),
       ],
     );
     final actual = await _usecase.execute();
