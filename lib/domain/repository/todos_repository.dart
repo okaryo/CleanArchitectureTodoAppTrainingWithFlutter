@@ -2,6 +2,7 @@ import 'package:clean_architecture_todo_app/domain/model/todo_id.dart';
 import 'package:clean_architecture_todo_app/domain/model/todo_list.dart';
 
 abstract class TodosRepository {
+  // Future<State<TodoList>> subscribe();
   Future<TodoList> getTodoList();
   Future<void> createTodo(
     final String title,
