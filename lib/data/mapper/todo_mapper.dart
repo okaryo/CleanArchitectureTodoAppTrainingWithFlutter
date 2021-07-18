@@ -22,4 +22,19 @@ class TodoMapper {
       'due_date': model.dueDate.toIso8601String(),
     };
   }
+
+  static TodoEntity transformToNewEntityMap(
+    final String title,
+    final String description,
+    final bool isCompleted,
+    final DateTime dueDate,
+  ) {
+    return {
+      'id': null,
+      'title': title,
+      'description': description,
+      'is_completed': isCompleted ? 1 : 0,
+      'due_date': dueDate.toIso8601String(),
+    };
+  }
 }
