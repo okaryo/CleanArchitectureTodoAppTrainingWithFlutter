@@ -31,7 +31,7 @@ void main() {
       final expected = TodoList(
         values: [
           Todo(
-            id: TodoId(value: 1),
+            id: const TodoId(value: 1),
             title: 'title',
             description: 'description',
             isCompleted: false,
@@ -54,7 +54,15 @@ void main() {
           'is_completed': 0,
           'due_date': _date.toIso8601String(),
         },
-      )).thenAnswer((_) async => null);
+      )).thenAnswer(
+        (_) async => {
+          'id': 1,
+          'title': 'title',
+          'description': 'description',
+          'is_completed': 0,
+          'due_date': _date.toIso8601String(),
+        },
+      );
     });
 
     test('should return void', () async {
