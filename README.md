@@ -9,9 +9,10 @@ https://user-images.githubusercontent.com/44517313/126060424-7057afec-6d51-496f-
 
 ## Architecture Diagram
 Please let me know if there's anything I can do to improve it, or any other better ways!
-![architecture](https://user-images.githubusercontent.com/44517313/126060852-c398fd5f-6984-48b6-b3fe-c5690638c229.png)
+![architecture](https://user-images.githubusercontent.com/44517313/126062451-21377d41-002b-485e-bb53-8dbee71a3f8e.png)
 
 ## No Consideration
 - performance
+- error handling
 - UI/UX
 
