@@ -47,18 +47,12 @@ class TodoListStateController extends StateNotifier<State<TodoList>> {
 
   addTodo(final String title, final String description, final bool isCompleted, final DateTime dueDate) async {
     try {
-      await _createTodoUseCase.execute(
+      final newTodo = await _createTodoUseCase.execute(
         title,
         description,
         isCompleted,
         dueDate,
       );
-      final newTodo = Todo(
-          id: const TodoId(value: 10),
-          title: title,
-          description: description,
-          isCompleted: isCompleted,
-          dueDate: dueDate);
       state = state.when(
         fixed: (content) => State.fixed(content.addTodo(newTodo)),
         loading: () => State.fixed(TodoList(values: [newTodo])),
@@ -92,7 +86,7 @@ class TodoListStateController extends StateNotifier<State<TodoList>> {
     try {
       await _deleteTodoUseCase.execute(id);
       state = state.when(
-        fixed: (content) => State.fixed(TodoList(values: content.values..removeWhere((todo) => todo.id == id))),
+        fixed: (content) => State.fixed(content.removeTodoById(id)),
         loading: () => const State.loading(),
         error: (exception) => State.error(exception),
       );
