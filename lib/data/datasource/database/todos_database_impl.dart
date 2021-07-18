@@ -24,13 +24,19 @@ class TodosDatabaseImpl implements TodosDatabase {
     return db.query(_tableName);
   }
 
-  Future<void> insertTodo(final TodoEntity todo) async {
+  Future<TodoEntity> insertTodo(final TodoEntity todo) async {
     final db = await database;
-    await db.insert(
-      _tableName,
-      todo,
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
+    late final TodoEntity todoEntity;
+    await db.transaction((txn) async {
+      final id = await txn.insert(
+        _tableName,
+        todo,
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+      final results = await txn.query(_tableName, where: '$_columnId = ?', whereArgs: [id]);
+      todoEntity = results.first;
+    });
+    return todoEntity;
   }
 
   Future<void> updateTodo(final TodoEntity todo) async {
@@ -59,7 +65,7 @@ class TodosDatabaseImpl implements TodosDatabase {
       onCreate: (db, _) {
         db.execute('''
           CREATE TABLE $_tableName(
-            $_columnId INTEGER PRIMARY KEY,
+            $_columnId INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
             $_columnTitle TEXT NOT NULL,
             $_columnDescription TEXT,
             $_columnIsCompleted INTEGER NOT NULL,

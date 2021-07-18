@@ -19,11 +19,12 @@ void main() {
       (_) async => TodoList(
         values: [
           Todo(
-              id: const TodoId(value: 1),
-              title: 'title',
-              description: 'description',
-              isCompleted: false,
-              dueDate: _date),
+            id: const TodoId(value: 1),
+            title: 'title',
+            description: 'description',
+            isCompleted: false,
+            dueDate: _date,
+          ),
         ],
       ),
     );

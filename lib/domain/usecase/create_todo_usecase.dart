@@ -1,5 +1,7 @@
+import 'package:clean_architecture_todo_app/domain/model/todo.dart';
+
 abstract class CreateTodoUseCase {
-  Future<void> execute(
+  Future<Todo> execute(
     final String title,
     final String description,
     final bool isCompleted,

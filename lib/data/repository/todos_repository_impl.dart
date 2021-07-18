@@ -18,20 +18,19 @@ class TodosRepositoryImpl implements TodosRepository {
   }
 
   @override
-  Future<void> createTodo(
+  Future<Todo> createTodo(
     final String title,
     final String description,
     final bool isCompleted,
     final DateTime dueDate,
   ) async {
-    final newTodo = Todo(
-      id: const TodoId(value: 0),
-      title: title,
-      description: description,
-      isCompleted: isCompleted,
-      dueDate: dueDate,
-    );
-    await database.insertTodo(TodoMapper.transformToMap(newTodo));
+    final todoEntity = await database.insertTodo(TodoMapper.transformToNewEntityMap(
+      title,
+      description,
+      isCompleted,
+      dueDate,
+    ));
+    return TodoMapper.transformToModel(todoEntity);
   }
 
   @override

@@ -1,8 +1,7 @@
 import 'package:clean_architecture_todo_app/domain/model/todo.dart';
 import 'package:clean_architecture_todo_app/domain/model/todo_list.dart';
-import 'package:clean_architecture_todo_app/presentation/state/state.dart' as state;
-import 'package:clean_architecture_todo_app/presentation/state/todo_list_state_controller.dart';
 import 'package:clean_architecture_todo_app/presentation/view/todo_form_page.dart';
+import 'package:clean_architecture_todo_app/presentation/viewmodel/todolist/filter_kind.dart';
 import 'package:clean_architecture_todo_app/presentation/viewmodel/todolist/todo_list_viewmodel.dart';
 import 'package:dain/dain.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,24 +15,31 @@ class TodoListPage extends HookConsumerWidget {
 
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
-    final _provider = StateNotifierProvider<TodoListStateController, state.State<TodoList>>(
-      (_) => _viewModel.todoListStateController,
-    );
     return Scaffold(
       appBar: AppBar(
         title: const Text('ToDo App'),
       ),
       body: HookBuilder(
         builder: (final BuildContext context) {
-          final state = ref.watch(_provider);
-          return state.when(
-            fixed: (content) => _buildTodoListWidget(context, content),
+          final filteredTodoListState = ref.watch(_viewModel.filteredTodoListStateProvider);
+          return filteredTodoListState.when(
+            fixed: (content) => _buildTodoListContainerWidget(context, content),
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (_) => _buildErrorWidget(),
           );
         },
       ),
       floatingActionButton: _buildFloatingActionButton(context),
+    );
+  }
+
+  Widget _buildTodoListContainerWidget(final BuildContext context, final TodoList todoList) {
+    return Column(
+      children: [
+        ChipsBarWidget(),
+        const Divider(height: 2, color: Colors.grey),
+        Expanded(child: _buildTodoListWidget(context, todoList)),
+      ],
     );
   }
 
@@ -44,6 +50,8 @@ class TodoListPage extends HookConsumerWidget {
       return ListView.builder(
         padding: const EdgeInsets.all(8),
         itemCount: todoList.length,
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
         itemBuilder: (final BuildContext context, final int index) {
           return _buildTodoItemCardWidget(context, todoList[index]);
         },
@@ -125,5 +133,51 @@ class TodoListPage extends HookConsumerWidget {
 
   Widget _buildErrorWidget() {
     return const Center(child: Text('An error has occurred!'));
+  }
+}
+
+class ChipsBarWidget extends HookConsumerWidget {
+  final _viewModel = Dain.inject<TodoListViewModel>();
+
+  @override
+  Widget build(final BuildContext context, final WidgetRef ref) {
+    return HookBuilder(
+      builder: (final BuildContext context) {
+        final currentFilterKind = ref.watch(_viewModel.filterKindStateProvider);
+        return SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 8, right: 8),
+            child: Row(
+              children: [
+                InputChip(
+                  label: const Text('All'),
+                  selected: _viewModel.isSelectedFilterKind(FilterKind.all),
+                  onSelected: (_) => _viewModel.onSelectFilterKind(FilterKind.all),
+                  selectedColor: _chipColor(currentFilterKind, FilterKind.all),
+                ),
+                const SizedBox(width: 8),
+                InputChip(
+                  label: const Text('Completed'),
+                  selected: _viewModel.isSelectedFilterKind(FilterKind.completed),
+                  onSelected: (_) => _viewModel.onSelectFilterKind(FilterKind.completed),
+                  selectedColor: _chipColor(currentFilterKind, FilterKind.completed),
+                ),
+                const SizedBox(width: 8),
+                InputChip(
+                  label: const Text('Incomplete'),
+                  selected: _viewModel.isSelectedFilterKind(FilterKind.incomplete),
+                  onSelected: (_) => _viewModel.onSelectFilterKind(FilterKind.incomplete),
+                  selectedColor: _chipColor(currentFilterKind, FilterKind.incomplete),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Color? _chipColor(final FilterKind currentFilterKind, final FilterKind filterKind) {
+    return currentFilterKind == filterKind ? Colors.lightGreen : null;
   }
 }
