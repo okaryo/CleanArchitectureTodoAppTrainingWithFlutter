@@ -1,16 +1,17 @@
-# clean_architecture_todo_app
+## CleanArchitectureTodoAppTrainingWithFlutter
+Flutter + CleanArchitecture + sqflite + riverpod + state_notifier + freezed!
 
-CleanArchitecuture ToDo App
+## Motivation
+I wanted to make a flutter app using riverpod and state_notifier with CleanArchitecture.
 
-## Getting Started
+## UI
+https://user-images.githubusercontent.com/44517313/126060424-7057afec-6d51-496f-ae43-8a4476d7b852.mp4
 
-This project is a starting point for a Flutter application.
+## Architecture Diagram
+Please let me know if there's anything I can do to improve it, or any other better ways!
+![architecture](https://user-images.githubusercontent.com/44517313/126060852-c398fd5f-6984-48b6-b3fe-c5690638c229.png)
 
-A few resources to get you started if this is your first Flutter project:
+## No Consideration
+- performance
+- UI/UX
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
