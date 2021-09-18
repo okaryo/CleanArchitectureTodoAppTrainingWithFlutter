@@ -27,7 +27,7 @@ class TodoListPage extends StatelessWidget {
               return watch(_filteredTodoListProvider).maybeWhen(
                 success: (content) => _buildTodoListContainerWidget(context, content),
                 error: (_) => _buildErrorWidget(),
-                orElse: () => const Center(child: CircularProgressIndicator()),
+                orElse: () => const Expanded(child: Center(child: CircularProgressIndicator())),
               );
             },
           ),

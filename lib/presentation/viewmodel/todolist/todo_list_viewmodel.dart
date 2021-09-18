@@ -112,7 +112,6 @@ class TodoListViewModel extends StateNotifier<State<TodoList>> {
 
   deleteTodo(final TodoId id) async {
     try {
-      state = const State.loading();
       await _deleteTodoUseCase.execute(id);
       state = State.success(state.data!.removeTodoById(id));
     } on Exception catch (e) {
