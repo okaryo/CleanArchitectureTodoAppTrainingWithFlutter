@@ -1,7 +1,7 @@
 import 'package:clean_architecture_todo_app/domain/model/todo.dart';
 import 'package:clean_architecture_todo_app/presentation/viewmodel/todoform/todo_form_viewmodel.dart';
-import 'package:dain/dain.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 class TodoFormPage extends StatefulWidget {
@@ -14,13 +14,19 @@ class TodoFormPage extends StatefulWidget {
 }
 
 class _TodoFormPageState extends State<TodoFormPage> {
-  final _viewModel = Dain.inject<TodoFormViewModel>();
+  late final TodoFormViewModel _viewModel;
+  final Todo? _todo;
   final _formKey = GlobalKey<FormState>();
   final _dueDateFormFocusNode = _DisabledFocusNode();
   late TextEditingController _dueDateTextFieldController;
 
-  _TodoFormPageState(final Todo? todo) {
-    _viewModel.initTodo(todo);
+  _TodoFormPageState(final Todo? todo) : _todo = todo;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _viewModel = context.read(todoFormViewModelProvider(_todo));
     _dueDateTextFieldController = TextEditingController(
       text: DateFormat('yyyy/MM/dd').format(_viewModel.initialDueDateValue()),
     );
