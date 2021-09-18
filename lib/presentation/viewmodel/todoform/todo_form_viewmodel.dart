@@ -1,9 +1,14 @@
 import 'package:clean_architecture_todo_app/domain/model/todo.dart';
 import 'package:clean_architecture_todo_app/domain/model/todo_id.dart';
-import 'package:clean_architecture_todo_app/presentation/state/todo_list_state_controller.dart';
+import 'package:clean_architecture_todo_app/presentation/viewmodel/todolist/todo_list_viewmodel.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+final todoFormViewModelProvider = Provider.autoDispose.family<TodoFormViewModel, Todo?>((ref, todo) {
+  return TodoFormViewModel(ref.read, todo);
+});
 
 class TodoFormViewModel {
-  final TodoListStateController _todoListStateController;
+  late final TodoListViewModel _todoListViewModel;
   late TodoId _id;
   var _title = '';
   var _description = '';
@@ -11,9 +16,12 @@ class TodoFormViewModel {
   var _dueDate = DateTime.now();
   var _isNewTodo = false;
 
-  TodoFormViewModel(this._todoListStateController);
+  TodoFormViewModel(final Reader read, final Todo? todo) {
+    _todoListViewModel = read(todoListViewModelStateNotifierProvider.notifier);
+    _initTodo(todo);
+  }
 
-  initTodo(final Todo? todo) {
+  _initTodo(final Todo? todo) {
     if (todo == null) {
       _isNewTodo = true;
     } else {
@@ -27,7 +35,7 @@ class TodoFormViewModel {
 
   createOrUpdateTodo() {
     if (_isNewTodo) {
-      _todoListStateController.addTodo(_title, _description, _isCompleted, _dueDate);
+      _todoListViewModel.addTodo(_title, _description, _isCompleted, _dueDate);
     } else {
       final newTodo = Todo(
         id: _id,
@@ -36,12 +44,12 @@ class TodoFormViewModel {
         isCompleted: _isCompleted,
         dueDate: _dueDate,
       );
-      _todoListStateController.updateTodo(newTodo);
+      _todoListViewModel.updateTodo(newTodo);
     }
   }
 
   deleteTodo() {
-    if (!_isNewTodo) _todoListStateController.deleteTodo(_id);
+    if (!_isNewTodo) _todoListViewModel.deleteTodo(_id);
   }
 
   String appBarTitle() => _isNewTodo ? 'Add ToDo' : 'Edit ToDo';
