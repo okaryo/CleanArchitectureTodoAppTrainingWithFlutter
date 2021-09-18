@@ -2,7 +2,7 @@
 Flutter + CleanArchitecture + sqflite + riverpod + state_notifier + freezed!
 
 ## Motivation
-I wanted to make a flutter app using riverpod and state_notifier with CleanArchitecture.
+I wanted to practice making a flutter app using riverpod and state_notifier with CleanArchitecture.
 
 ## UI
 https://user-images.githubusercontent.com/44517313/126060424-7057afec-6d51-496f-ae43-8a4476d7b852.mp4
