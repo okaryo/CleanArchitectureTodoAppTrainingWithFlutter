@@ -1,46 +1,44 @@
 import 'package:clean_architecture_todo_app/domain/model/todo.dart';
 import 'package:clean_architecture_todo_app/domain/model/todo_list.dart';
 import 'package:clean_architecture_todo_app/presentation/view/todo_form_page.dart';
-import 'package:clean_architecture_todo_app/presentation/viewmodel/todolist/filter_kind.dart';
+import 'package:clean_architecture_todo_app/presentation/viewmodel/todolist/filter_kind_viewmodel.dart';
 import 'package:clean_architecture_todo_app/presentation/viewmodel/todolist/todo_list_viewmodel.dart';
-import 'package:dain/dain.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
-class TodoListPage extends HookConsumerWidget {
-  final _viewModel = Dain.inject<TodoListViewModel>();
+class TodoListPage extends StatelessWidget {
+  final _filteredTodoListProvider = filteredTodoListProvider;
+  final _todoListProvider = todoListViewModelStateNotifierProvider;
 
   @override
-  Widget build(final BuildContext context, final WidgetRef ref) {
+  Widget build(final BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('ToDo App'),
       ),
-      body: HookBuilder(
-        builder: (final BuildContext context) {
-          final filteredTodoListState = ref.watch(_viewModel.filteredTodoListStateProvider);
-          return filteredTodoListState.when(
-            fixed: (content) => _buildTodoListContainerWidget(context, content),
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (_) => _buildErrorWidget(),
-          );
-        },
+      body: Column(
+        children: [
+          ChipsBarWidget(),
+          const Divider(height: 2, color: Colors.grey),
+          Consumer(
+            builder: (context, watch, _) {
+              return watch(_filteredTodoListProvider).maybeWhen(
+                success: (content) => _buildTodoListContainerWidget(context, content),
+                error: (_) => _buildErrorWidget(),
+                orElse: () => const Center(child: CircularProgressIndicator()),
+              );
+            },
+          ),
+        ],
       ),
       floatingActionButton: _buildFloatingActionButton(context),
     );
   }
 
   Widget _buildTodoListContainerWidget(final BuildContext context, final TodoList todoList) {
-    return Column(
-      children: [
-        ChipsBarWidget(),
-        const Divider(height: 2, color: Colors.grey),
-        Expanded(child: _buildTodoListWidget(context, todoList)),
-      ],
-    );
+    return Expanded(child: _buildTodoListWidget(context, todoList));
   }
 
   Widget _buildTodoListWidget(final BuildContext context, final TodoList todoList) {
@@ -90,7 +88,7 @@ class TodoListPage extends HookConsumerWidget {
                 ),
               ),
               const SizedBox(width: 8),
-              todo.isCompleted ? _buildCheckedIcon(todo) : _buildUncheckedIcon(todo),
+              todo.isCompleted ? _buildCheckedIcon(context, todo) : _buildUncheckedIcon(context, todo),
             ],
           ),
         ),
@@ -103,18 +101,18 @@ class TodoListPage extends HookConsumerWidget {
     );
   }
 
-  Widget _buildCheckedIcon(final Todo todo) {
+  Widget _buildCheckedIcon(final BuildContext context, final Todo todo) {
     return InkResponse(
       child: const Icon(Icons.done, size: 24, color: Colors.lightGreen),
-      onTap: () => _viewModel.undoTodo(todo),
+      onTap: () => context.read(_todoListProvider.notifier).undoTodo(todo),
       splashColor: Colors.transparent,
     );
   }
 
-  Widget _buildUncheckedIcon(final Todo todo) {
+  Widget _buildUncheckedIcon(final BuildContext context, final Todo todo) {
     return InkResponse(
       child: const Icon(Icons.radio_button_off_rounded, size: 24, color: Colors.grey),
-      onTap: () => _viewModel.completeTodo(todo),
+      onTap: () => context.read(_todoListProvider.notifier).completeTodo(todo),
       splashColor: Colors.transparent,
     );
   }
@@ -136,14 +134,15 @@ class TodoListPage extends HookConsumerWidget {
   }
 }
 
-class ChipsBarWidget extends HookConsumerWidget {
-  final _viewModel = Dain.inject<TodoListViewModel>();
+class ChipsBarWidget extends StatelessWidget {
+  final _provider = filterKindViewModelStateNotifierProvider;
 
   @override
-  Widget build(final BuildContext context, final WidgetRef ref) {
-    return HookBuilder(
-      builder: (final BuildContext context) {
-        final currentFilterKind = ref.watch(_viewModel.filterKindStateProvider);
+  Widget build(final BuildContext context) {
+    return Consumer(
+      builder: (context, watch, _) {
+        final viewModel = watch(_provider.notifier);
+        watch(_provider);
         return SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.only(left: 8, right: 8),
@@ -151,23 +150,23 @@ class ChipsBarWidget extends HookConsumerWidget {
               children: [
                 InputChip(
                   label: const Text('All'),
-                  selected: _viewModel.isSelectedFilterKind(FilterKind.all),
-                  onSelected: (_) => _viewModel.onSelectFilterKind(FilterKind.all),
-                  selectedColor: _chipColor(currentFilterKind, FilterKind.all),
+                  selected: viewModel.isFilteredByAll(),
+                  onSelected: (_) => viewModel.filterByAll(),
+                  selectedColor: viewModel.isFilteredByAll() ? Colors.lightGreen : null,
                 ),
                 const SizedBox(width: 8),
                 InputChip(
                   label: const Text('Completed'),
-                  selected: _viewModel.isSelectedFilterKind(FilterKind.completed),
-                  onSelected: (_) => _viewModel.onSelectFilterKind(FilterKind.completed),
-                  selectedColor: _chipColor(currentFilterKind, FilterKind.completed),
+                  selected: viewModel.isFilteredByCompleted(),
+                  onSelected: (_) => viewModel.filterByCompleted(),
+                  selectedColor: viewModel.isFilteredByCompleted() ? Colors.lightGreen : null,
                 ),
                 const SizedBox(width: 8),
                 InputChip(
                   label: const Text('Incomplete'),
-                  selected: _viewModel.isSelectedFilterKind(FilterKind.incomplete),
-                  onSelected: (_) => _viewModel.onSelectFilterKind(FilterKind.incomplete),
-                  selectedColor: _chipColor(currentFilterKind, FilterKind.incomplete),
+                  selected: viewModel.isFilteredByIncomplete(),
+                  onSelected: (_) => viewModel.filterByIncomplete(),
+                  selectedColor: viewModel.isFilteredByIncomplete() ? Colors.lightGreen : null,
                 ),
               ],
             ),
@@ -175,9 +174,5 @@ class ChipsBarWidget extends HookConsumerWidget {
         );
       },
     );
-  }
-
-  Color? _chipColor(final FilterKind currentFilterKind, final FilterKind filterKind) {
-    return currentFilterKind == filterKind ? Colors.lightGreen : null;
   }
 }
