@@ -19,7 +19,7 @@ void main() {
       'description',
       true,
       _date,
-    )).thenAnswer((_) async => null);
+    )).thenAnswer((_) async => {});
   });
 
   test('should return void', () async {

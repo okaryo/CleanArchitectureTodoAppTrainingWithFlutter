@@ -3,7 +3,6 @@ import 'package:clean_architecture_todo_app/domain/model/todo_list.dart';
 import 'package:clean_architecture_todo_app/presentation/view/todo_form_page.dart';
 import 'package:clean_architecture_todo_app/presentation/viewmodel/todolist/filter_kind_viewmodel.dart';
 import 'package:clean_architecture_todo_app/presentation/viewmodel/todolist/todo_list_viewmodel.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';

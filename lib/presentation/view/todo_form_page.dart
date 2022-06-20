@@ -10,23 +10,22 @@ class TodoFormPage extends StatefulWidget {
   const TodoFormPage(this._todo);
 
   @override
-  State<StatefulWidget> createState() => _TodoFormPageState(_todo);
+  State<StatefulWidget> createState() => _TodoFormPageState();
 }
 
 class _TodoFormPageState extends State<TodoFormPage> {
   late final TodoFormViewModel _viewModel;
-  final Todo? _todo;
   final _formKey = GlobalKey<FormState>();
   final _dueDateFormFocusNode = _DisabledFocusNode();
   late TextEditingController _dueDateTextFieldController;
 
-  _TodoFormPageState(final Todo? todo) : _todo = todo;
+  _TodoFormPageState();
 
   @override
   void initState() {
     super.initState();
 
-    _viewModel = context.read(todoFormViewModelProvider(_todo));
+    _viewModel = context.read(todoFormViewModelProvider(widget._todo));
     _dueDateTextFieldController = TextEditingController(
       text: DateFormat('yyyy/MM/dd').format(_viewModel.initialDueDateValue()),
     );
@@ -84,16 +83,14 @@ class _TodoFormPageState extends State<TodoFormPage> {
   Widget _buildFormWidget() {
     return Form(
       key: _formKey,
-      child: Container(
-        child: Column(
-          children: [
-            _buildTitleFormWidget(),
-            const SizedBox(height: 16),
-            _buildDescriptionFormWidget(),
-            const SizedBox(height: 16),
-            _buildDueDateFormWidget()
-          ],
-        ),
+      child: Column(
+        children: [
+          _buildTitleFormWidget(),
+          const SizedBox(height: 16),
+          _buildDescriptionFormWidget(),
+          const SizedBox(height: 16),
+          _buildDueDateFormWidget()
+        ],
       ),
     );
   }
@@ -162,6 +159,8 @@ class _TodoFormPageState extends State<TodoFormPage> {
       _dueDateTextFieldController.text = DateFormat('yyyy/MM/dd').format(selectedDate);
       _viewModel.setDueDate(selectedDate);
     }
+
+    return null;
   }
 
   _showConfirmDeleteTodoDialog() async {

@@ -15,15 +15,17 @@ class TodosDatabaseImpl implements TodosDatabase {
   static Database? _database;
 
   Future<Database> get database async {
-    if (_database == null) _database = await _initDatabase();
+    _database ??= await _initDatabase();
     return _database!;
   }
 
+  @override
   Future<TodoListEntity> allTodos() async {
     final db = await database;
     return db.query(_tableName);
   }
 
+  @override
   Future<TodoEntity> insertTodo(final TodoEntity todo) async {
     final db = await database;
     late final TodoEntity todoEntity;
@@ -39,6 +41,7 @@ class TodosDatabaseImpl implements TodosDatabase {
     return todoEntity;
   }
 
+  @override
   Future<void> updateTodo(final TodoEntity todo) async {
     final db = await database;
     final int id = todo['id'];
@@ -50,6 +53,7 @@ class TodosDatabaseImpl implements TodosDatabase {
     );
   }
 
+  @override
   Future<void> deleteTodo(final int id) async {
     final db = await database;
     await db.delete(

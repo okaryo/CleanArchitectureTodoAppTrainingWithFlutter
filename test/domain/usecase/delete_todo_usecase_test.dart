@@ -12,7 +12,7 @@ void main() {
   final DeleteTodoUseCase _usecase = DeleteTodoUseCaseImpl(_repository);
 
   setUp(() {
-    when(_repository.deleteTodo(const TodoId(value: 1))).thenAnswer((_) async => null);
+    when(_repository.deleteTodo(const TodoId(value: 1))).thenAnswer((_) async => {});
   });
 
   test('should return void', () async {

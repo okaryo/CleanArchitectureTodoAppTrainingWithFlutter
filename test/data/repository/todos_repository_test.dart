@@ -89,7 +89,7 @@ void main() {
           'is_completed': 1,
           'due_date': _date.toIso8601String(),
         },
-      )).thenAnswer((_) async => null);
+      )).thenAnswer((_) async => {});
     });
 
     test('should return void', () async {
@@ -108,7 +108,7 @@ void main() {
 
   group('deleteTodo', () {
     setUp(() {
-      when(_database.deleteTodo(1)).thenAnswer((_) async => null);
+      when(_database.deleteTodo(1)).thenAnswer((_) async => {});
     });
 
     test('should return void', () async {
