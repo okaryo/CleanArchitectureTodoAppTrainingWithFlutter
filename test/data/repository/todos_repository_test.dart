@@ -13,7 +13,7 @@ void main() {
   final TodosRepository _repository = TodosRepositoryImpl(_database);
   final _date = DateTime.now();
 
-  group('getTodoList', () {
+  group('#getTodoList', () {
     setUp(() {
       when(_database.allTodos()).thenAnswer((_) async => [
             {
@@ -44,11 +44,11 @@ void main() {
     });
   });
 
-  group('createTodo', () {
+  group('#createTodo', () {
     setUp(() {
       when(_database.insertTodo(
         {
-          'id': 0,
+          'id': null,
           'title': 'title',
           'description': 'description',
           'is_completed': 0,
@@ -69,7 +69,7 @@ void main() {
       await _repository.createTodo('title', 'description', false, _date);
       verify(_database.insertTodo(
         {
-          'id': 0,
+          'id': null,
           'title': 'title',
           'description': 'description',
           'is_completed': 0,
@@ -79,7 +79,7 @@ void main() {
     });
   });
 
-  group('updateTodo', () {
+  group('#updateTodo', () {
     setUp(() {
       when(_database.updateTodo(
         {
@@ -106,7 +106,7 @@ void main() {
     });
   });
 
-  group('deleteTodo', () {
+  group('#deleteTodo', () {
     setUp(() {
       when(_database.deleteTodo(1)).thenAnswer((_) async => {});
     });
