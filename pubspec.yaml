@@ -15,8 +15,8 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   cupertino_icons: ^1.0.0
-  flutter_riverpod: ^1.0.3
-  freezed_annotation: ^2.0.3
+  flutter_riverpod: ^0.14.0+3
+  freezed_annotation: ^0.14.0
   rxdart: ^0.27.1
   sqflite: ^2.0.0+3
   state_notifier: ^0.7.0
@@ -26,7 +26,7 @@ dev_dependencies:
     sdk: flutter
   build_runner: ^2.0.4
   flutter_lints: ^1.0.4
-  freezed: ^2.0.3+1
+  freezed: ^0.14.2
   mockito: ^5.0.10
 
 flutter:
