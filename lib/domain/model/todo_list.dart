@@ -20,9 +20,9 @@ class TodoList with _$TodoList {
     return copyWith(values: values.map((todo) => newTodo.id == todo.id ? newTodo : todo).toList());
   }
 
-  TodoList removeTodoById(final TodoId id) => copyWith(values: values.whereNot((todo) => todo.id == id).toList());
+  TodoList removeTodoById(final TodoId id) => copyWith(values: values.where((todo) => todo.id != id).toList());
 
   TodoList filterByCompleted() => copyWith(values: values.where((todo) => todo.isCompleted).toList());
 
-  TodoList filterByIncomplete() => copyWith(values: values.whereNot((todo) => todo.isCompleted).toList());
+  TodoList filterByIncomplete() => copyWith(values: values.where((todo) => !todo.isCompleted).toList());
 }
