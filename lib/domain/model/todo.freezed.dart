@@ -1,5 +1,7 @@
+// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides
+// ignore_for_file: type=lint
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
 
 part of 'todo.dart';
 
@@ -10,30 +12,7 @@ part of 'todo.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
-
-/// @nodoc
-class _$TodoTearOff {
-  const _$TodoTearOff();
-
-  _Todo call(
-      {required TodoId id,
-      required String title,
-      required String description,
-      required bool isCompleted,
-      required DateTime dueDate}) {
-    return _Todo(
-      id: id,
-      title: title,
-      description: description,
-      isCompleted: isCompleted,
-      dueDate: dueDate,
-    );
-  }
-}
-
-/// @nodoc
-const $Todo = _$TodoTearOff();
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 /// @nodoc
 mixin _$Todo {
@@ -110,9 +89,9 @@ class _$TodoCopyWithImpl<$Res> implements $TodoCopyWith<$Res> {
 }
 
 /// @nodoc
-abstract class _$TodoCopyWith<$Res> implements $TodoCopyWith<$Res> {
-  factory _$TodoCopyWith(_Todo value, $Res Function(_Todo) then) =
-      __$TodoCopyWithImpl<$Res>;
+abstract class _$$_TodoCopyWith<$Res> implements $TodoCopyWith<$Res> {
+  factory _$$_TodoCopyWith(_$_Todo value, $Res Function(_$_Todo) then) =
+      __$$_TodoCopyWithImpl<$Res>;
   @override
   $Res call(
       {TodoId id,
@@ -126,13 +105,13 @@ abstract class _$TodoCopyWith<$Res> implements $TodoCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$TodoCopyWithImpl<$Res> extends _$TodoCopyWithImpl<$Res>
-    implements _$TodoCopyWith<$Res> {
-  __$TodoCopyWithImpl(_Todo _value, $Res Function(_Todo) _then)
-      : super(_value, (v) => _then(v as _Todo));
+class __$$_TodoCopyWithImpl<$Res> extends _$TodoCopyWithImpl<$Res>
+    implements _$$_TodoCopyWith<$Res> {
+  __$$_TodoCopyWithImpl(_$_Todo _value, $Res Function(_$_Todo) _then)
+      : super(_value, (v) => _then(v as _$_Todo));
 
   @override
-  _Todo get _value => super._value as _Todo;
+  _$_Todo get _value => super._value as _$_Todo;
 
   @override
   $Res call({
@@ -142,7 +121,7 @@ class __$TodoCopyWithImpl<$Res> extends _$TodoCopyWithImpl<$Res>
     Object? isCompleted = freezed,
     Object? dueDate = freezed,
   }) {
-    return _then(_Todo(
+    return _then(_$_Todo(
       id: id == freezed
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -197,43 +176,39 @@ class _$_Todo extends _Todo {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is _Todo &&
-            (identical(other.id, id) ||
-                const DeepCollectionEquality().equals(other.id, id)) &&
-            (identical(other.title, title) ||
-                const DeepCollectionEquality().equals(other.title, title)) &&
-            (identical(other.description, description) ||
-                const DeepCollectionEquality()
-                    .equals(other.description, description)) &&
-            (identical(other.isCompleted, isCompleted) ||
-                const DeepCollectionEquality()
-                    .equals(other.isCompleted, isCompleted)) &&
-            (identical(other.dueDate, dueDate) ||
-                const DeepCollectionEquality().equals(other.dueDate, dueDate)));
+        (other.runtimeType == runtimeType &&
+            other is _$_Todo &&
+            const DeepCollectionEquality().equals(other.id, id) &&
+            const DeepCollectionEquality().equals(other.title, title) &&
+            const DeepCollectionEquality()
+                .equals(other.description, description) &&
+            const DeepCollectionEquality()
+                .equals(other.isCompleted, isCompleted) &&
+            const DeepCollectionEquality().equals(other.dueDate, dueDate));
   }
 
   @override
-  int get hashCode =>
-      runtimeType.hashCode ^
-      const DeepCollectionEquality().hash(id) ^
-      const DeepCollectionEquality().hash(title) ^
-      const DeepCollectionEquality().hash(description) ^
-      const DeepCollectionEquality().hash(isCompleted) ^
-      const DeepCollectionEquality().hash(dueDate);
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(id),
+      const DeepCollectionEquality().hash(title),
+      const DeepCollectionEquality().hash(description),
+      const DeepCollectionEquality().hash(isCompleted),
+      const DeepCollectionEquality().hash(dueDate));
 
   @JsonKey(ignore: true)
   @override
-  _$TodoCopyWith<_Todo> get copyWith =>
-      __$TodoCopyWithImpl<_Todo>(this, _$identity);
+  _$$_TodoCopyWith<_$_Todo> get copyWith =>
+      __$$_TodoCopyWithImpl<_$_Todo>(this, _$identity);
 }
 
 abstract class _Todo extends Todo {
   const factory _Todo(
-      {required TodoId id,
-      required String title,
-      required String description,
-      required bool isCompleted,
-      required DateTime dueDate}) = _$_Todo;
+      {required final TodoId id,
+      required final String title,
+      required final String description,
+      required final bool isCompleted,
+      required final DateTime dueDate}) = _$_Todo;
   const _Todo._() : super._();
 
   @override
@@ -248,5 +223,5 @@ abstract class _Todo extends Todo {
   DateTime get dueDate => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
-  _$TodoCopyWith<_Todo> get copyWith => throw _privateConstructorUsedError;
+  _$$_TodoCopyWith<_$_Todo> get copyWith => throw _privateConstructorUsedError;
 }
