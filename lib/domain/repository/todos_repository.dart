@@ -1,6 +1,6 @@
-import 'package:clean_architecture_todo_app/domain/model/todo.dart';
-import 'package:clean_architecture_todo_app/domain/model/todo_id.dart';
-import 'package:clean_architecture_todo_app/domain/model/todo_list.dart';
+import '../model/todo.dart';
+import '../model/todo_id.dart';
+import '../model/todo_list.dart';
 
 abstract class TodosRepository {
   Future<TodoList> getTodoList();

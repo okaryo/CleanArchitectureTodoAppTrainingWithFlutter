@@ -1,5 +1,5 @@
-import 'package:clean_architecture_todo_app/domain/model/todo.dart';
-import 'package:clean_architecture_todo_app/presentation/viewmodel/todoform/todo_form_viewmodel.dart';
+import '../../domain/model/todo.dart';
+import '../viewmodel/todoform/todo_form_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';

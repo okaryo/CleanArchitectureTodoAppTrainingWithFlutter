@@ -1,6 +1,6 @@
-import 'package:clean_architecture_todo_app/domain/model/todo.dart';
-import 'package:clean_architecture_todo_app/domain/model/todo_id.dart';
-import 'package:clean_architecture_todo_app/presentation/viewmodel/todolist/todo_list_viewmodel.dart';
+import '../../../domain/model/todo.dart';
+import '../../../domain/model/todo_id.dart';
+import '../todolist/todo_list_viewmodel.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final todoFormViewModelProvider = Provider.autoDispose.family<TodoFormViewModel, Todo?>((ref, todo) {

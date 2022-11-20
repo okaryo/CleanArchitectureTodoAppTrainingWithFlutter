@@ -1,4 +1,4 @@
-import 'package:clean_architecture_todo_app/data/entity/todos_entity.dart';
+import '../../entity/todos_entity.dart';
 
 abstract class TodosDatabase {
   Future<TodoListEntity> allTodos();

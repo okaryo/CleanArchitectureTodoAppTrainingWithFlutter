@@ -1,6 +1,6 @@
-import 'package:clean_architecture_todo_app/data/entity/todos_entity.dart';
-import 'package:clean_architecture_todo_app/domain/model/todo.dart';
-import 'package:clean_architecture_todo_app/domain/model/todo_id.dart';
+import '../entity/todos_entity.dart';
+import '../../domain/model/todo.dart';
+import '../../domain/model/todo_id.dart';
 
 class TodoMapper {
   static Todo transformToModel(final TodoEntity entity) {

@@ -1,6 +1,6 @@
-import 'package:clean_architecture_todo_app/domain/model/todo.dart';
-import 'package:clean_architecture_todo_app/domain/repository/todos_repository.dart';
-import 'package:clean_architecture_todo_app/domain/usecase/create_todo_usecase.dart';
+import '../model/todo.dart';
+import '../repository/todos_repository.dart';
+import 'create_todo_usecase.dart';
 
 class CreateTodoUseCaseImpl implements CreateTodoUseCase {
   final TodosRepository _repository;

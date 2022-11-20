@@ -1,8 +1,8 @@
-import 'package:clean_architecture_todo_app/domain/model/todo.dart';
-import 'package:clean_architecture_todo_app/domain/model/todo_list.dart';
-import 'package:clean_architecture_todo_app/presentation/view/todo_form_page.dart';
-import 'package:clean_architecture_todo_app/presentation/viewmodel/todolist/filter_kind_viewmodel.dart';
-import 'package:clean_architecture_todo_app/presentation/viewmodel/todolist/todo_list_viewmodel.dart';
+import '../../domain/model/todo.dart';
+import '../../domain/model/todo_list.dart';
+import 'todo_form_page.dart';
+import '../viewmodel/todolist/filter_kind_viewmodel.dart';
+import '../viewmodel/todolist/todo_list_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -24,9 +24,11 @@ class TodoListPage extends StatelessWidget {
           Consumer(
             builder: (context, watch, _) {
               return watch(_filteredTodoListProvider).maybeWhen(
-                success: (content) => _buildTodoListContainerWidget(context, content),
+                success: (content) =>
+                    _buildTodoListContainerWidget(context, content),
                 error: (_) => _buildErrorWidget(),
-                orElse: () => const Expanded(child: Center(child: CircularProgressIndicator())),
+                orElse: () => const Expanded(
+                    child: Center(child: CircularProgressIndicator())),
               );
             },
           ),
@@ -36,11 +38,13 @@ class TodoListPage extends StatelessWidget {
     );
   }
 
-  Widget _buildTodoListContainerWidget(final BuildContext context, final TodoList todoList) {
+  Widget _buildTodoListContainerWidget(
+      final BuildContext context, final TodoList todoList) {
     return Expanded(child: _buildTodoListWidget(context, todoList));
   }
 
-  Widget _buildTodoListWidget(final BuildContext context, final TodoList todoList) {
+  Widget _buildTodoListWidget(
+      final BuildContext context, final TodoList todoList) {
     if (todoList.length == 0) {
       return const Center(child: Text('No ToDo'));
     } else {
@@ -79,7 +83,9 @@ class TodoListPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      todo.description.isEmpty ? 'No Description' : todo.description,
+                      todo.description.isEmpty
+                          ? 'No Description'
+                          : todo.description,
                       style: Theme.of(context).textTheme.bodyText2,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -87,7 +93,9 @@ class TodoListPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 8),
-              todo.isCompleted ? _buildCheckedIcon(context, todo) : _buildUncheckedIcon(context, todo),
+              todo.isCompleted
+                  ? _buildCheckedIcon(context, todo)
+                  : _buildUncheckedIcon(context, todo),
             ],
           ),
         ),
@@ -110,7 +118,8 @@ class TodoListPage extends StatelessWidget {
 
   Widget _buildUncheckedIcon(final BuildContext context, final Todo todo) {
     return InkResponse(
-      child: const Icon(Icons.radio_button_off_rounded, size: 24, color: Colors.grey),
+      child: const Icon(Icons.radio_button_off_rounded,
+          size: 24, color: Colors.grey),
       onTap: () => context.read(_todoListProvider.notifier).completeTodo(todo),
       splashColor: Colors.transparent,
     );
@@ -142,33 +151,43 @@ class ChipsBarWidget extends StatelessWidget {
       builder: (context, watch, _) {
         final viewModel = watch(_provider.notifier);
         watch(_provider);
-        return SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 8, right: 8),
-            child: Row(
-              children: [
-                InputChip(
-                  label: const Text('All'),
-                  selected: viewModel.isFilteredByAll(),
-                  onSelected: (_) => viewModel.filterByAll(),
-                  selectedColor: viewModel.isFilteredByAll() ? Colors.lightGreen : null,
-                ),
-                const SizedBox(width: 8),
-                InputChip(
-                  label: const Text('Completed'),
-                  selected: viewModel.isFilteredByCompleted(),
-                  onSelected: (_) => viewModel.filterByCompleted(),
-                  selectedColor: viewModel.isFilteredByCompleted() ? Colors.lightGreen : null,
-                ),
-                const SizedBox(width: 8),
-                InputChip(
-                  label: const Text('Incomplete'),
-                  selected: viewModel.isFilteredByIncomplete(),
-                  onSelected: (_) => viewModel.filterByIncomplete(),
-                  selectedColor: viewModel.isFilteredByIncomplete() ? Colors.lightGreen : null,
-                ),
-              ],
+        return SizedBox(
+          height: kToolbarHeight,
+          child: ListView(
+            padding: const EdgeInsets.only(
+              left: 8,
+              right: 8,
+              top: 3,
+              bottom: 3,
             ),
+            scrollDirection: Axis.horizontal,
+            children: [
+              InputChip(
+                label: const Text('All'),
+                selected: viewModel.isFilteredByAll(),
+                onSelected: (_) => viewModel.filterByAll(),
+                selectedColor:
+                    viewModel.isFilteredByAll() ? Colors.lightGreen : null,
+              ),
+              const SizedBox(width: 8),
+              InputChip(
+                label: const Text('Completed'),
+                selected: viewModel.isFilteredByCompleted(),
+                onSelected: (_) => viewModel.filterByCompleted(),
+                selectedColor: viewModel.isFilteredByCompleted()
+                    ? Colors.lightGreen
+                    : null,
+              ),
+              const SizedBox(width: 8),
+              InputChip(
+                label: const Text('Incomplete'),
+                selected: viewModel.isFilteredByIncomplete(),
+                onSelected: (_) => viewModel.filterByIncomplete(),
+                selectedColor: viewModel.isFilteredByIncomplete()
+                    ? Colors.lightGreen
+                    : null,
+              ),
+            ],
           ),
         );
       },

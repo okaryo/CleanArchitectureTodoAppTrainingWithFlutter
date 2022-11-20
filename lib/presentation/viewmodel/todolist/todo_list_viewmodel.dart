@@ -1,13 +1,13 @@
-import 'package:clean_architecture_todo_app/domain/domain_module.dart';
-import 'package:clean_architecture_todo_app/domain/model/todo.dart';
-import 'package:clean_architecture_todo_app/domain/model/todo_id.dart';
-import 'package:clean_architecture_todo_app/domain/model/todo_list.dart';
-import 'package:clean_architecture_todo_app/domain/usecase/create_todo_usecase.dart';
-import 'package:clean_architecture_todo_app/domain/usecase/delete_todo_usecase.dart';
-import 'package:clean_architecture_todo_app/domain/usecase/get_todo_list_usecase.dart';
-import 'package:clean_architecture_todo_app/domain/usecase/update_todo_usecase.dart';
-import 'package:clean_architecture_todo_app/presentation/state/state.dart';
-import 'package:clean_architecture_todo_app/presentation/viewmodel/todolist/filter_kind_viewmodel.dart';
+import '../../../domain/domain_module.dart';
+import '../../../domain/model/todo.dart';
+import '../../../domain/model/todo_id.dart';
+import '../../../domain/model/todo_list.dart';
+import '../../../domain/usecase/create_todo_usecase.dart';
+import '../../../domain/usecase/delete_todo_usecase.dart';
+import '../../../domain/usecase/get_todo_list_usecase.dart';
+import '../../../domain/usecase/update_todo_usecase.dart';
+import '../../state/state.dart';
+import 'filter_kind_viewmodel.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final filteredTodoListProvider = Provider.autoDispose<State<TodoList>>((ref) {

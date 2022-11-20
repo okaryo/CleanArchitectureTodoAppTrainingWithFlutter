@@ -1,12 +1,12 @@
-import 'package:clean_architecture_todo_app/data/data_module.dart';
-import 'package:clean_architecture_todo_app/domain/usecase/create_todo_usecase.dart';
-import 'package:clean_architecture_todo_app/domain/usecase/create_todo_usecase_impl.dart';
-import 'package:clean_architecture_todo_app/domain/usecase/delete_todo_usecase.dart';
-import 'package:clean_architecture_todo_app/domain/usecase/delete_todo_usecase_impl.dart';
-import 'package:clean_architecture_todo_app/domain/usecase/get_todo_list_usecase.dart';
-import 'package:clean_architecture_todo_app/domain/usecase/get_todo_list_usecase_impl.dart';
-import 'package:clean_architecture_todo_app/domain/usecase/update_todo_usecase.dart';
-import 'package:clean_architecture_todo_app/domain/usecase/update_todo_usecase_impl.dart';
+import '../data/data_module.dart';
+import 'usecase/create_todo_usecase.dart';
+import 'usecase/create_todo_usecase_impl.dart';
+import 'usecase/delete_todo_usecase.dart';
+import 'usecase/delete_todo_usecase_impl.dart';
+import 'usecase/get_todo_list_usecase.dart';
+import 'usecase/get_todo_list_usecase_impl.dart';
+import 'usecase/update_todo_usecase.dart';
+import 'usecase/update_todo_usecase_impl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final getTodoListUseCaseProvider =
