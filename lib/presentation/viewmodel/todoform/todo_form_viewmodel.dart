@@ -52,7 +52,7 @@ class TodoFormViewModel {
     if (!_isNewTodo) _todoListViewModel.deleteTodo(_id);
   }
 
-  String appBarTitle() => _isNewTodo ? 'Add ToDo' : 'Edit ToDo';
+  String appBarTitle() => _isNewTodo ? 'Add TODO' : 'Edit TODO';
 
   String initialTitleValue() => _title;
 

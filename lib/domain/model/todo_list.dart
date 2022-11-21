@@ -17,12 +17,18 @@ class TodoList with _$TodoList {
   TodoList addTodo(final Todo todo) => copyWith(values: [...values, todo]);
 
   TodoList updateTodo(final Todo newTodo) {
-    return copyWith(values: values.map((todo) => newTodo.id == todo.id ? newTodo : todo).toList());
+    return copyWith(
+        values: values
+            .map((todo) => newTodo.id == todo.id ? newTodo : todo)
+            .toList());
   }
 
-  TodoList removeTodoById(final TodoId id) => copyWith(values: values.where((todo) => todo.id != id).toList());
+  TodoList removeTodoById(final TodoId id) =>
+      copyWith(values: values.where((todo) => todo.id != id).toList());
 
-  TodoList filterByCompleted() => copyWith(values: values.where((todo) => todo.isCompleted).toList());
+  TodoList filterByCompleted() =>
+      copyWith(values: values.where((todo) => todo.isCompleted).toList());
 
-  TodoList filterByIncomplete() => copyWith(values: values.where((todo) => !todo.isCompleted).toList());
+  TodoList filterByIncomplete() =>
+      copyWith(values: values.where((todo) => !todo.isCompleted).toList());
 }

@@ -1,23 +1,32 @@
-import '../../domain/model/todo.dart';
-import '../viewmodel/todoform/todo_form_viewmodel.dart';
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
-class TodoFormPage extends StatefulWidget {
-  final Todo? _todo;
+import '../../domain/model/todo.dart';
+import '../viewmodel/todoform/todo_form_viewmodel.dart';
 
-  const TodoFormPage(this._todo);
+class TodoFormPage extends StatefulWidget {
+  final Todo? todo;
+  final bool showSave;
+
+  const TodoFormPage({
+    Key? key,
+    this.todo,
+    this.showSave = true,
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _TodoFormPageState();
 }
 
 class _TodoFormPageState extends State<TodoFormPage> {
-  late final TodoFormViewModel _viewModel;
   final _formKey = GlobalKey<FormState>();
   final _dueDateFormFocusNode = _DisabledFocusNode();
-  late TextEditingController _dueDateTextFieldController;
+  TextEditingController? _dueDateTextFieldController;
+  TodoFormViewModel? _viewModel;
+  Timer? _debounce;
 
   _TodoFormPageState();
 
@@ -25,9 +34,13 @@ class _TodoFormPageState extends State<TodoFormPage> {
   void initState() {
     super.initState();
 
-    _viewModel = context.read(todoFormViewModelProvider(widget._todo));
+    init();
+  }
+
+  void init() {
+    _viewModel = context.read(todoFormViewModelProvider(widget.todo));
     _dueDateTextFieldController = TextEditingController(
-      text: DateFormat('yyyy/MM/dd').format(_viewModel.initialDueDateValue()),
+      text: DateFormat('yyyy/MM/dd').format(_viewModel!.initialDueDateValue()),
     );
   }
 
@@ -39,16 +52,44 @@ class _TodoFormPageState extends State<TodoFormPage> {
   }
 
   @override
+  void didUpdateWidget(covariant TodoFormPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.todo != widget.todo) {
+      init();
+      _formKey.currentState?.reset();
+    }
+  }
+
+  @override
   Widget build(final BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_viewModel.appBarTitle()),
+        title: Text(_viewModel!.appBarTitle()),
         actions: [
-          if (_viewModel.shouldShowDeleteTodoIcon()) _buildDeleteTodoIconWidget(),
+          if (_viewModel!.shouldShowDeleteTodoIcon())
+            _buildDeleteTodoIconWidget(),
         ],
       ),
-      body: _buildBodyWidget(),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(
+            minWidth: 200,
+            maxWidth: 800,
+          ),
+          child: _buildBodyWidget(),
+        ),
+      ),
     );
+  }
+
+  bool _save(BuildContext context) {
+    final currentState = _formKey.currentState;
+    if (currentState != null && currentState.validate()) {
+      _viewModel!.createOrUpdateTodo();
+      return true;
+    }
+    return false;
   }
 
   Widget _buildBodyWidget() {
@@ -58,7 +99,7 @@ class _TodoFormPageState extends State<TodoFormPage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           _buildFormWidget(),
-          _buildSaveButtonWidget(),
+          if (widget.showSave) _buildSaveButtonWidget(),
         ],
       ),
     );
@@ -69,9 +110,8 @@ class _TodoFormPageState extends State<TodoFormPage> {
       width: double.infinity,
       child: ElevatedButton(
         onPressed: () {
-          final currentState = _formKey.currentState;
-          if (currentState != null && currentState.validate()) {
-            _viewModel.createOrUpdateTodo();
+          final valid = _save(context);
+          if (valid) {
             Navigator.pop(context);
           }
         },
@@ -83,6 +123,16 @@ class _TodoFormPageState extends State<TodoFormPage> {
   Widget _buildFormWidget() {
     return Form(
       key: _formKey,
+      onChanged: () {
+        if (!widget.showSave) {
+          _debounce?.cancel();
+          _debounce = Timer(const Duration(milliseconds: 500), () {
+            _save(context);
+          });
+        }
+      },
+      onWillPop: () async => _save(context),
+      autovalidateMode: AutovalidateMode.always,
       child: Column(
         children: [
           _buildTitleFormWidget(),
@@ -97,10 +147,10 @@ class _TodoFormPageState extends State<TodoFormPage> {
 
   Widget _buildTitleFormWidget() {
     return TextFormField(
-      initialValue: _viewModel.initialTitleValue(),
+      initialValue: _viewModel!.initialTitleValue(),
       maxLength: 20,
-      onChanged: (value) => _viewModel.setTitle(value),
-      validator: (_) => _viewModel.validateTitle(),
+      onChanged: (value) => _viewModel!.setTitle(value),
+      validator: (_) => _viewModel!.validateTitle(),
       decoration: const InputDecoration(
         icon: Icon(Icons.edit),
         labelText: 'Title',
@@ -112,10 +162,10 @@ class _TodoFormPageState extends State<TodoFormPage> {
 
   Widget _buildDescriptionFormWidget() {
     return TextFormField(
-      initialValue: _viewModel.initialDescriptionValue(),
+      initialValue: _viewModel!.initialDescriptionValue(),
       maxLength: 150,
-      onChanged: (value) => _viewModel.setDescription(value),
-      validator: (_) => _viewModel.validateDescription(),
+      onChanged: (value) => _viewModel!.setDescription(value),
+      validator: (_) => _viewModel!.validateDescription(),
       decoration: const InputDecoration(
         icon: Icon(Icons.view_headline),
         labelText: 'Description',
@@ -130,8 +180,8 @@ class _TodoFormPageState extends State<TodoFormPage> {
       controller: _dueDateTextFieldController,
       maxLength: 50,
       onTap: () => _showDatePicker(context),
-      onChanged: (value) => _viewModel.setTitle(value),
-      validator: (_) => _viewModel.validateDescription(),
+      onChanged: (value) => _viewModel!.setTitle(value),
+      validator: (_) => _viewModel!.validateDescription(),
       decoration: const InputDecoration(
         icon: Icon(Icons.calendar_today_rounded),
         labelText: 'DueDate',
@@ -151,13 +201,14 @@ class _TodoFormPageState extends State<TodoFormPage> {
   Future<DateTime?> _showDatePicker(final BuildContext context) async {
     final selectedDate = await showDatePicker(
       context: context,
-      initialDate: _viewModel.initialDueDateValue(),
-      firstDate: _viewModel.datePickerFirstDate(),
-      lastDate: _viewModel.datePickerLastDate(),
+      initialDate: _viewModel!.initialDueDateValue(),
+      firstDate: _viewModel!.datePickerFirstDate(),
+      lastDate: _viewModel!.datePickerLastDate(),
     );
     if (selectedDate != null) {
-      _dueDateTextFieldController.text = DateFormat('yyyy/MM/dd').format(selectedDate);
-      _viewModel.setDueDate(selectedDate);
+      _dueDateTextFieldController!.text =
+          DateFormat('yyyy/MM/dd').format(selectedDate);
+      _viewModel!.setDueDate(selectedDate);
     }
 
     return null;
@@ -168,7 +219,7 @@ class _TodoFormPageState extends State<TodoFormPage> {
       context: context,
       builder: (_) {
         return AlertDialog(
-          content: const Text('Delete ToDo?'),
+          content: const Text('Delete TODO?'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context, false),
@@ -183,7 +234,7 @@ class _TodoFormPageState extends State<TodoFormPage> {
       },
     );
     if (result) {
-      _viewModel.deleteTodo();
+      _viewModel!.deleteTodo();
       Navigator.pop(context);
     }
   }
