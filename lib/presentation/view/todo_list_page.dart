@@ -61,8 +61,9 @@ class TodoListPage extends StatelessWidget {
   }
 
   Widget _buildTodoItemCardWidget(final BuildContext context, final Todo todo) {
-    return InkWell(
-      child: Card(
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
@@ -74,19 +75,19 @@ class TodoListPage extends StatelessWidget {
                   children: [
                     Text(
                       todo.title,
-                      style: Theme.of(context).textTheme.headline6,
+                      style: Theme.of(context).textTheme.titleLarge,
                       overflow: TextOverflow.ellipsis,
                     ),
                     Text(
                       DateFormat('yyyy/MM/dd').format(todo.dueDate),
-                      style: Theme.of(context).textTheme.caption,
+                      style: Theme.of(context).textTheme.bodySmall,
                     ),
                     const SizedBox(height: 4),
                     Text(
                       todo.description.isEmpty
                           ? 'No Description'
                           : todo.description,
-                      style: Theme.of(context).textTheme.bodyText2,
+                      style: Theme.of(context).textTheme.bodyMedium,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ],
@@ -99,12 +100,13 @@ class TodoListPage extends StatelessWidget {
             ],
           ),
         ),
-      ),
-      onTap: () => Navigator.push(
+        onTap: () => Navigator.push(
           context,
           MaterialPageRoute(
             builder: (_) => TodoFormPage(todo),
-          )),
+          ),
+        ),
+      ),
     );
   }
 
@@ -118,8 +120,11 @@ class TodoListPage extends StatelessWidget {
 
   Widget _buildUncheckedIcon(final BuildContext context, final Todo todo) {
     return InkResponse(
-      child: const Icon(Icons.radio_button_off_rounded,
-          size: 24, color: Colors.grey),
+      child: Icon(
+        Icons.radio_button_off_rounded,
+        size: 24,
+        color: Theme.of(context).colorScheme.outline,
+      ),
       onTap: () => context.read(_todoListProvider.notifier).completeTodo(todo),
       splashColor: Colors.transparent,
     );
@@ -162,35 +167,51 @@ class ChipsBarWidget extends StatelessWidget {
             ),
             scrollDirection: Axis.horizontal,
             children: [
-              InputChip(
-                label: const Text('All'),
-                selected: viewModel.isFilteredByAll(),
-                onSelected: (_) => viewModel.filterByAll(),
-                selectedColor:
-                    viewModel.isFilteredByAll() ? Colors.lightGreen : null,
+              buildChip(
+                context,
+                viewModel.isFilteredByAll(),
+                'All',
+                viewModel.filterByAll,
               ),
               const SizedBox(width: 8),
-              InputChip(
-                label: const Text('Completed'),
-                selected: viewModel.isFilteredByCompleted(),
-                onSelected: (_) => viewModel.filterByCompleted(),
-                selectedColor: viewModel.isFilteredByCompleted()
-                    ? Colors.lightGreen
-                    : null,
+              buildChip(
+                context,
+                viewModel.isFilteredByCompleted(),
+                'Completed',
+                viewModel.filterByCompleted,
               ),
               const SizedBox(width: 8),
-              InputChip(
-                label: const Text('Incomplete'),
-                selected: viewModel.isFilteredByIncomplete(),
-                onSelected: (_) => viewModel.filterByIncomplete(),
-                selectedColor: viewModel.isFilteredByIncomplete()
-                    ? Colors.lightGreen
-                    : null,
+              buildChip(
+                context,
+                viewModel.isFilteredByIncomplete(),
+                'Incomplete',
+                viewModel.filterByIncomplete,
               ),
             ],
           ),
         );
       },
+    );
+  }
+
+  Widget buildChip(
+    BuildContext context,
+    bool checked,
+    String label,
+    VoidCallback onSelect,
+  ) {
+    return InputChip(
+      showCheckmark: checked,
+      label: Text(label),
+      selected: checked,
+      onSelected: (_) => onSelect(),
+      selectedColor: checked ? Theme.of(context).colorScheme.tertiary : null,
+      labelStyle: checked
+          ? TextStyle(
+              color: Theme.of(context).colorScheme.onTertiary,
+            )
+          : null,
+      checkmarkColor: checked ? Theme.of(context).colorScheme.onTertiary : null,
     );
   }
 }

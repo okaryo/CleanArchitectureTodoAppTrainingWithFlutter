@@ -16,24 +16,25 @@ class MainApp extends StatelessWidget {
     const source = Colors.green;
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.light(useMaterial3: true).copyWith(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: source,
-          brightness: Brightness.light,
-        ),
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-        appBarTheme: const AppBarTheme(centerTitle: false),
-      ),
-      darkTheme: ThemeData.dark(useMaterial3: true).copyWith(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: source,
-          brightness: Brightness.dark,
-        ),
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-        appBarTheme: const AppBarTheme(centerTitle: false),
-      ),
+      theme: buildTheme(source, Brightness.light),
+      darkTheme: buildTheme(source, Brightness.dark),
       themeMode: ThemeMode.system,
       home: TodoListPage(),
+    );
+  }
+
+  ThemeData buildTheme(Color source, Brightness brightness) {
+    final base = brightness == Brightness.light
+        ? ThemeData.light(useMaterial3: true)
+        : ThemeData.dark(useMaterial3: true);
+    return base.copyWith(
+      brightness: brightness,
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: source,
+        brightness: brightness,
+      ),
+      visualDensity: VisualDensity.adaptivePlatformDensity,
+      appBarTheme: const AppBarTheme(centerTitle: false),
     );
   }
 }
