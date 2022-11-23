@@ -24,80 +24,24 @@ class TodoCard extends HookWidget {
     return Card(
       clipBehavior: Clip.antiAlias,
       color: theme.colorScheme.surfaceVariant,
-      child: InkWell(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: DefaultTextStyle(
-            style: TextStyle(
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Flexible(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        todo.title,
-                        style: theme.textTheme.titleLarge,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      Text(
-                        DateFormat('yyyy/MM/dd').format(todo.dueDate),
-                        style: theme.textTheme.bodySmall,
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        todo.description.isEmpty
-                            ? 'No Description'
-                            : todo.description,
-                        style: theme.textTheme.bodyMedium,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 8),
-                _buildIcon(context, todo),
-              ],
-            ),
-          ),
-        ),
+      child: ListTile(
         onTap: onTap,
+        isThreeLine: todo.description.isNotEmpty,
+        title: Text(todo.title),
+        subtitle: Text(DateFormat('yyyy/MM/dd').format(todo.dueDate) +
+            '\n${todo.description.isEmpty ? 'No Description' : todo.description}'),
+        trailing: Switch(
+          value: todo.isCompleted,
+          onChanged: (value) {
+            final controller = context.read(_todoListProvider.notifier);
+            if (value) {
+              controller.completeTodo(todo);
+            } else {
+              controller.undoTodo(todo);
+            }
+          },
+        ),
       ),
-    );
-  }
-
-  Widget _buildIcon(
-    final BuildContext context,
-    final Todo todo,
-  ) {
-    return todo.isCompleted
-        ? _buildCheckedIcon(context, todo)
-        : _buildUncheckedIcon(context, todo);
-  }
-
-  Widget _buildCheckedIcon(
-    final BuildContext context,
-    final Todo todo,
-  ) {
-    return InkResponse(
-      child: const Icon(Icons.done, size: 24, color: Colors.lightGreen),
-      onTap: () => context.read(_todoListProvider.notifier).undoTodo(todo),
-      splashColor: Colors.transparent,
-    );
-  }
-
-  Widget _buildUncheckedIcon(final BuildContext context, final Todo todo) {
-    return InkResponse(
-      child: Icon(
-        Icons.radio_button_off_rounded,
-        size: 24,
-        color: Theme.of(context).colorScheme.outline,
-      ),
-      onTap: () => context.read(_todoListProvider.notifier).completeTodo(todo),
-      splashColor: Colors.transparent,
     );
   }
 }
