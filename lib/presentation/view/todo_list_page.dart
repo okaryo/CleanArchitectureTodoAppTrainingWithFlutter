@@ -15,24 +15,28 @@ class TodoListPage extends HookWidget {
   @override
   Widget build(final BuildContext context) {
     final selectedTodos = useState<List<Todo>?>(null);
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final isTablet = constraints.maxWidth > 800;
-        if (isTablet) {
-          return _buildListAndDetails(context, selectedTodos);
-        } else {
-          return _buildListWidget(context, selectedTodos, (todo) {
-            if (todo != null) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => TodoFormPage(todo: todo),
-                ),
-              );
-            }
-          });
-        }
-      },
+    return Material(
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final isTablet = constraints.maxWidth > 800;
+          if (isTablet) {
+            return _buildListAndDetails(context, selectedTodos);
+          } else {
+            return _buildListWidget(context, selectedTodos, (todo) {
+              if (todo != null) {
+                Navigator.push<Todo?>(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => TodoFormPage(todo: todo),
+                  ),
+                ).then((result) async {
+                  selectedTodos.value = result == null ? null : [result];
+                });
+              }
+            });
+          }
+        },
+      ),
     );
   }
 
@@ -49,24 +53,25 @@ class TodoListPage extends HookWidget {
         children: [
           ChipsBarWidget(),
           const Divider(height: 2, color: Colors.grey),
-          Consumer(
-            builder: (context, watch, _) {
-              return watch(_filteredTodoListProvider).maybeWhen(
-                success: (content) => _buildTodoListContainerWidget(
-                  context,
-                  content,
-                  selectedTodos,
-                  onSelect,
-                ),
-                error: (_) => _buildErrorWidget(),
-                orElse: () => const Expanded(
-                    child: Center(child: CircularProgressIndicator())),
-              );
-            },
+          Expanded(
+            child: Consumer(
+              builder: (context, watch, _) {
+                return watch(_filteredTodoListProvider).maybeWhen(
+                    success: (content) => _buildTodoListContainerWidget(
+                          context,
+                          content,
+                          selectedTodos,
+                          onSelect,
+                        ),
+                    error: (_) => _buildErrorWidget(),
+                    orElse: () =>
+                        const Center(child: CircularProgressIndicator()));
+              },
+            ),
           ),
         ],
       ),
-      floatingActionButton: _buildFloatingActionButton(context),
+      floatingActionButton: _buildFloatingActionButton(context, selectedTodos),
     );
   }
 
@@ -76,13 +81,11 @@ class TodoListPage extends HookWidget {
     final ValueNotifier<List<Todo>?> selectedTodos,
     final ValueChanged<Todo?> onSelect,
   ) {
-    return Expanded(
-      child: _buildTodoListWidget(
-        context,
-        todoList,
-        selectedTodos,
-        onSelect,
-      ),
+    return _buildTodoListWidget(
+      context,
+      todoList,
+      selectedTodos,
+      onSelect,
     );
   }
 
@@ -137,7 +140,7 @@ class TodoListPage extends HookWidget {
                   selectedTodos.value = todo != null ? [todo] : null;
                 }),
               ),
-              const VerticalDivider(width: 0),
+              const VerticalDivider(width: 1),
               Expanded(
                 child:
                     selectedTodos.value == null || selectedTodos.value!.isEmpty
@@ -151,21 +154,25 @@ class TodoListPage extends HookWidget {
             ],
           ),
           error: (_) => _buildErrorWidget(),
-          orElse: () =>
-              const Expanded(child: Center(child: CircularProgressIndicator())),
+          orElse: () => const Center(child: CircularProgressIndicator()),
         );
       },
     );
   }
 
-  Widget _buildFloatingActionButton(final BuildContext context) {
+  Widget _buildFloatingActionButton(
+    final BuildContext context,
+    final ValueNotifier<List<Todo>?> selectedTodos,
+  ) {
     return FloatingActionButton(
-      onPressed: () => Navigator.push(
+      onPressed: () => Navigator.push<Todo?>(
         context,
         MaterialPageRoute(
           builder: (_) => const TodoFormPage(),
         ),
-      ),
+      ).then((result) async {
+        selectedTodos.value = result == null ? null : [result];
+      }),
       child: const Icon(Icons.add),
       tooltip: 'Add TODO',
     );

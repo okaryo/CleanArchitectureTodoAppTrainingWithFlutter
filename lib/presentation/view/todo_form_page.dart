@@ -40,21 +40,19 @@ class _TodoFormPageState extends State<TodoFormPage> {
   void init() {
     _viewModel = context.read(todoFormViewModelProvider(widget.todo));
     _dueDateTextFieldController = TextEditingController(
-      text: DateFormat('yyyy/MM/dd').format(_viewModel!.initialDueDateValue()),
+      text: _viewModel!.initialDueDateString(),
     );
   }
 
   @override
   void dispose() {
     _dueDateFormFocusNode.dispose();
-
     super.dispose();
   }
 
   @override
   void didUpdateWidget(covariant TodoFormPage oldWidget) {
     super.didUpdateWidget(oldWidget);
-
     if (oldWidget.todo != widget.todo) {
       init();
       _formKey.currentState?.reset();
@@ -193,6 +191,7 @@ class _TodoFormPageState extends State<TodoFormPage> {
 
   Widget _buildDeleteTodoIconWidget() {
     return IconButton(
+      tooltip: 'Delete Todo',
       onPressed: () => _showConfirmDeleteTodoDialog(),
       icon: const Icon(Icons.delete),
     );

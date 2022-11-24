@@ -30,11 +30,11 @@ class TodoCard extends HookWidget {
         title: Text(todo.title),
         subtitle: Text(DateFormat('yyyy/MM/dd').format(todo.dueDate) +
             '\n${todo.description.isEmpty ? 'No Description' : todo.description}'),
-        trailing: Switch(
+        trailing: Checkbox(
           value: todo.isCompleted,
           onChanged: (value) {
             final controller = context.read(_todoListProvider.notifier);
-            if (value) {
+            if (value == true) {
               controller.completeTodo(todo);
             } else {
               controller.undoTodo(todo);

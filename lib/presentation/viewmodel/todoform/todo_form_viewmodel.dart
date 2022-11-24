@@ -2,8 +2,10 @@ import '../../../domain/model/todo.dart';
 import '../../../domain/model/todo_id.dart';
 import '../todolist/todo_list_viewmodel.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
-final todoFormViewModelProvider = Provider.autoDispose.family<TodoFormViewModel, Todo?>((ref, todo) {
+final todoFormViewModelProvider =
+    Provider.autoDispose.family<TodoFormViewModel, Todo?>((ref, todo) {
   return TodoFormViewModel(ref.read, todo);
 });
 
@@ -21,7 +23,7 @@ class TodoFormViewModel {
     _initTodo(todo);
   }
 
-  _initTodo(final Todo? todo) {
+  void _initTodo(final Todo? todo) {
     if (todo == null) {
       _isNewTodo = true;
     } else {
@@ -33,7 +35,7 @@ class TodoFormViewModel {
     }
   }
 
-  createOrUpdateTodo() {
+  void createOrUpdateTodo() {
     if (_isNewTodo) {
       _todoListViewModel.addTodo(_title, _description, _isCompleted, _dueDate);
     } else {
@@ -48,7 +50,7 @@ class TodoFormViewModel {
     }
   }
 
-  deleteTodo() {
+  void deleteTodo() {
     if (!_isNewTodo) _todoListViewModel.deleteTodo(_id);
   }
 
@@ -60,19 +62,22 @@ class TodoFormViewModel {
 
   DateTime initialDueDateValue() => _dueDate;
 
+  String initialDueDateString() =>
+      DateFormat('yyyy/MM/dd').format(initialDueDateValue());
+
   DateTime datePickerFirstDate() => DateTime(DateTime.now().year - 5, 1, 1);
 
   DateTime datePickerLastDate() => DateTime(DateTime.now().year + 5, 12, 31);
 
   bool shouldShowDeleteTodoIcon() => !_isNewTodo;
 
-  setTitle(final String value) => _title = value;
+  void setTitle(final String value) => _title = value;
 
-  setDescription(final String value) => _description = value;
+  void setDescription(final String value) => _description = value;
 
-  setTodoStatus(final bool status) => _isCompleted = status;
+  void setTodoStatus(final bool status) => _isCompleted = status;
 
-  setDueDate(final DateTime value) => _dueDate = value;
+  void setDueDate(final DateTime value) => _dueDate = value;
 
   String? validateTitle() {
     if (_title.isEmpty) {

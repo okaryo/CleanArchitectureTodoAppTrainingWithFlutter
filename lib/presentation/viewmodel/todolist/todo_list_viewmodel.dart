@@ -32,14 +32,14 @@ final filteredTodoListProvider = Provider.autoDispose<State<TodoList>>((ref) {
 });
 
 final todoListViewModelStateNotifierProvider =
-    StateNotifierProvider.autoDispose<TodoListViewModel, State<TodoList>>((ref) {
-  return TodoListViewModel(
+    StateNotifierProvider.autoDispose<TodoListViewModel, State<TodoList>>(
+  (ref) => TodoListViewModel(
     ref.watch(getTodoListUseCaseProvider),
     ref.watch(createTodoUseCaseProvider),
     ref.watch(updateTodoUseCaseProvider),
     ref.watch(deleteTodoUseCaseProvider),
-  );
-});
+  ),
+);
 
 class TodoListViewModel extends StateNotifier<State<TodoList>> {
   final GetTodoListUseCase _getTodoListUseCase;
@@ -56,17 +56,17 @@ class TodoListViewModel extends StateNotifier<State<TodoList>> {
     _getTodoList();
   }
 
-  completeTodo(final Todo todo) {
+  void completeTodo(final Todo todo) {
     final newTodo = todo.copyWith(isCompleted: true);
     updateTodo(newTodo);
   }
 
-  undoTodo(final Todo todo) {
+  void undoTodo(final Todo todo) {
     final newTodo = todo.copyWith(isCompleted: false);
     updateTodo(newTodo);
   }
 
-  _getTodoList() async {
+  Future<void> _getTodoList() async {
     try {
       state = const State.loading();
       final todoList = await _getTodoListUseCase.execute();
@@ -76,7 +76,7 @@ class TodoListViewModel extends StateNotifier<State<TodoList>> {
     }
   }
 
-  addTodo(
+  Future<void> addTodo(
     final String title,
     final String description,
     final bool isCompleted,
@@ -95,7 +95,7 @@ class TodoListViewModel extends StateNotifier<State<TodoList>> {
     }
   }
 
-  updateTodo(final Todo newTodo) async {
+  Future<void> updateTodo(final Todo newTodo) async {
     try {
       await _updateTodoUseCase.execute(
         newTodo.id,
@@ -110,7 +110,7 @@ class TodoListViewModel extends StateNotifier<State<TodoList>> {
     }
   }
 
-  deleteTodo(final TodoId id) async {
+  Future<void> deleteTodo(final TodoId id) async {
     try {
       await _deleteTodoUseCase.execute(id);
       state = State.success(state.data!.removeTodoById(id));
