@@ -9,11 +9,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v1
         with:
-          flutter-version: '2.10.5'
-          channel: 'stable'
+          channel: 'master'
       - name: Run pub get
         run: flutter pub get
       - name: Run test
@@ -24,11 +23,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v1
         with:
-          flutter-version: '2.10.5'
-          channel: 'stable'
+          channel: 'master'
       - name: Run pub get
         run: flutter pub get
       - name: Run analyze
