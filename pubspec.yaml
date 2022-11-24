@@ -1,5 +1,5 @@
 name: clean_architecture_todo_app
-description: CleanArchitecuture ToDo App
+description: CleanArchitecuture TODO App
 
 publish_to: 'none'
 
@@ -20,6 +20,7 @@ dependencies:
   rxdart: ^0.27.1
   sqflite: ^2.0.0+3
   state_notifier: ^0.7.0
+  flutter_hooks: ^0.18.5+1
 
 dev_dependencies:
   flutter_test:

@@ -1,4 +1,4 @@
-import 'package:clean_architecture_todo_app/domain/model/todo_id.dart';
+import 'todo_id.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'todo.freezed.dart';

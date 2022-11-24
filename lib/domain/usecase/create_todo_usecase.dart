@@ -1,4 +1,4 @@
-import 'package:clean_architecture_todo_app/domain/model/todo.dart';
+import '../model/todo.dart';
 
 abstract class CreateTodoUseCase {
   Future<Todo> execute(

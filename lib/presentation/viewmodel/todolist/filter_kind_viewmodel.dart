@@ -3,7 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 enum FilterKind { all, completed, incomplete }
 
 final filterKindViewModelStateNotifierProvider =
-    StateNotifierProvider.autoDispose<FilterKindViewModel, FilterKind>((_) => FilterKindViewModel());
+    StateNotifierProvider.autoDispose<FilterKindViewModel, FilterKind>(
+  (_) => FilterKindViewModel(),
+);
 
 class FilterKindViewModel extends StateNotifier<FilterKind> {
   FilterKindViewModel() : super(FilterKind.all);

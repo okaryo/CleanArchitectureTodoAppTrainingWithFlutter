@@ -1,177 +1,184 @@
-import 'package:clean_architecture_todo_app/domain/model/todo.dart';
-import 'package:clean_architecture_todo_app/domain/model/todo_list.dart';
-import 'package:clean_architecture_todo_app/presentation/view/todo_form_page.dart';
-import 'package:clean_architecture_todo_app/presentation/viewmodel/todolist/filter_kind_viewmodel.dart';
-import 'package:clean_architecture_todo_app/presentation/viewmodel/todolist/todo_list_viewmodel.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 
-class TodoListPage extends StatelessWidget {
+import '../../domain/model/todo.dart';
+import '../../domain/model/todo_list.dart';
+import '../viewmodel/todolist/todo_list_viewmodel.dart';
+import 'todo_form_page.dart';
+import 'widgets/chips_bar.dart';
+import 'widgets/todo_card.dart';
+
+class TodoListPage extends HookWidget {
   final _filteredTodoListProvider = filteredTodoListProvider;
-  final _todoListProvider = todoListViewModelStateNotifierProvider;
 
   @override
   Widget build(final BuildContext context) {
+    final selectedTodos = useState<List<Todo>?>(null);
+    return Material(
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final isTablet = constraints.maxWidth > 800;
+          if (isTablet) {
+            return _buildListAndDetails(context, selectedTodos);
+          } else {
+            return _buildListWidget(context, selectedTodos, (todo) {
+              if (todo != null) {
+                Navigator.push<Todo?>(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => TodoFormPage(todo: todo),
+                  ),
+                ).then((result) async {
+                  selectedTodos.value = result == null ? null : [result];
+                });
+              }
+            });
+          }
+        },
+      ),
+    );
+  }
+
+  Widget _buildListWidget(
+    final BuildContext context,
+    final ValueNotifier<List<Todo>?> selectedTodos,
+    final ValueChanged<Todo?> onSelect,
+  ) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('ToDo App'),
+        title: const Text('TODO App'),
       ),
       body: Column(
         children: [
           ChipsBarWidget(),
           const Divider(height: 2, color: Colors.grey),
-          Consumer(
-            builder: (context, watch, _) {
-              return watch(_filteredTodoListProvider).maybeWhen(
-                success: (content) => _buildTodoListContainerWidget(context, content),
-                error: (_) => _buildErrorWidget(),
-                orElse: () => const Expanded(child: Center(child: CircularProgressIndicator())),
-              );
-            },
+          Expanded(
+            child: Consumer(
+              builder: (context, watch, _) {
+                return watch(_filteredTodoListProvider).maybeWhen(
+                    success: (content) => _buildTodoListContainerWidget(
+                          context,
+                          content,
+                          selectedTodos,
+                          onSelect,
+                        ),
+                    error: (_) => _buildErrorWidget(),
+                    orElse: () =>
+                        const Center(child: CircularProgressIndicator()));
+              },
+            ),
           ),
         ],
       ),
-      floatingActionButton: _buildFloatingActionButton(context),
+      floatingActionButton: _buildFloatingActionButton(context, selectedTodos),
     );
   }
 
-  Widget _buildTodoListContainerWidget(final BuildContext context, final TodoList todoList) {
-    return Expanded(child: _buildTodoListWidget(context, todoList));
+  Widget _buildTodoListContainerWidget(
+    final BuildContext context,
+    final TodoList todoList,
+    final ValueNotifier<List<Todo>?> selectedTodos,
+    final ValueChanged<Todo?> onSelect,
+  ) {
+    return _buildTodoListWidget(
+      context,
+      todoList,
+      selectedTodos,
+      onSelect,
+    );
   }
 
-  Widget _buildTodoListWidget(final BuildContext context, final TodoList todoList) {
+  Widget _buildTodoListWidget(
+    final BuildContext context,
+    final TodoList todoList,
+    final ValueNotifier<List<Todo>?> selectedTodos,
+    final ValueChanged<Todo?> onSelect,
+  ) {
     if (todoList.length == 0) {
-      return const Center(child: Text('No ToDo'));
+      return const Center(child: Text('No TODO'));
     } else {
-      return ListView.builder(
+      return _buildListViewWidget(context, todoList, onSelect);
+    }
+  }
+
+  Widget _buildListViewWidget(
+    final BuildContext context,
+    final TodoList todoList,
+    final ValueChanged<Todo?> onSelect,
+  ) =>
+      ListView.builder(
         padding: const EdgeInsets.all(8),
         itemCount: todoList.length,
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         itemBuilder: (final BuildContext context, final int index) {
-          return _buildTodoItemCardWidget(context, todoList[index]);
+          return TodoCard(
+            todo: todoList[index],
+            onTap: () => onSelect(todoList[index]),
+          );
         },
       );
-    }
-  }
 
-  Widget _buildTodoItemCardWidget(final BuildContext context, final Todo todo) {
-    return InkWell(
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  Widget _buildListAndDetails(
+    final BuildContext context,
+    final ValueNotifier<List<Todo>?> selectedTodos,
+  ) {
+    return Consumer(
+      builder: (context, watch, _) {
+        return watch(_filteredTodoListProvider).maybeWhen(
+          success: (todoList) => Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Flexible(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      todo.title,
-                      style: Theme.of(context).textTheme.headline6,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    Text(
-                      DateFormat('yyyy/MM/dd').format(todo.dueDate),
-                      style: Theme.of(context).textTheme.caption,
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      todo.description.isEmpty ? 'No Description' : todo.description,
-                      style: Theme.of(context).textTheme.bodyText2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
+              ConstrainedBox(
+                constraints: const BoxConstraints(
+                  minWidth: 300,
+                  maxWidth: 400,
                 ),
+                child: _buildListWidget(context, selectedTodos, (todo) {
+                  selectedTodos.value = todo != null ? [todo] : null;
+                }),
               ),
-              const SizedBox(width: 8),
-              todo.isCompleted ? _buildCheckedIcon(context, todo) : _buildUncheckedIcon(context, todo),
+              const VerticalDivider(width: 1),
+              Expanded(
+                child:
+                    selectedTodos.value == null || selectedTodos.value!.isEmpty
+                        ? const Center(child: Text('No TODO selected'))
+                        : TodoFormPage(
+                            key: ValueKey(selectedTodos.value!.first),
+                            todo: selectedTodos.value!.first,
+                            showSave: false,
+                          ),
+              ),
             ],
           ),
-        ),
-      ),
-      onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => TodoFormPage(todo),
-          )),
+          error: (_) => _buildErrorWidget(),
+          orElse: () => const Center(child: CircularProgressIndicator()),
+        );
+      },
     );
   }
 
-  Widget _buildCheckedIcon(final BuildContext context, final Todo todo) {
-    return InkResponse(
-      child: const Icon(Icons.done, size: 24, color: Colors.lightGreen),
-      onTap: () => context.read(_todoListProvider.notifier).undoTodo(todo),
-      splashColor: Colors.transparent,
-    );
-  }
-
-  Widget _buildUncheckedIcon(final BuildContext context, final Todo todo) {
-    return InkResponse(
-      child: const Icon(Icons.radio_button_off_rounded, size: 24, color: Colors.grey),
-      onTap: () => context.read(_todoListProvider.notifier).completeTodo(todo),
-      splashColor: Colors.transparent,
-    );
-  }
-
-  Widget _buildFloatingActionButton(final BuildContext context) {
+  Widget _buildFloatingActionButton(
+    final BuildContext context,
+    final ValueNotifier<List<Todo>?> selectedTodos,
+  ) {
     return FloatingActionButton(
-      onPressed: () => Navigator.push(
+      onPressed: () => Navigator.push<Todo?>(
         context,
         MaterialPageRoute(
-          builder: (_) => const TodoFormPage(null),
+          builder: (_) => const TodoFormPage(),
         ),
-      ),
+      ).then((result) async {
+        selectedTodos.value = result == null ? null : [result];
+      }),
       child: const Icon(Icons.add),
+      tooltip: 'Add TODO',
     );
   }
 
   Widget _buildErrorWidget() {
     return const Center(child: Text('An error has occurred!'));
-  }
-}
-
-class ChipsBarWidget extends StatelessWidget {
-  final _provider = filterKindViewModelStateNotifierProvider;
-
-  @override
-  Widget build(final BuildContext context) {
-    return Consumer(
-      builder: (context, watch, _) {
-        final viewModel = watch(_provider.notifier);
-        watch(_provider);
-        return SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 8, right: 8),
-            child: Row(
-              children: [
-                InputChip(
-                  label: const Text('All'),
-                  selected: viewModel.isFilteredByAll(),
-                  onSelected: (_) => viewModel.filterByAll(),
-                  selectedColor: viewModel.isFilteredByAll() ? Colors.lightGreen : null,
-                ),
-                const SizedBox(width: 8),
-                InputChip(
-                  label: const Text('Completed'),
-                  selected: viewModel.isFilteredByCompleted(),
-                  onSelected: (_) => viewModel.filterByCompleted(),
-                  selectedColor: viewModel.isFilteredByCompleted() ? Colors.lightGreen : null,
-                ),
-                const SizedBox(width: 8),
-                InputChip(
-                  label: const Text('Incomplete'),
-                  selected: viewModel.isFilteredByIncomplete(),
-                  onSelected: (_) => viewModel.filterByIncomplete(),
-                  selectedColor: viewModel.isFilteredByIncomplete() ? Colors.lightGreen : null,
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
   }
 }

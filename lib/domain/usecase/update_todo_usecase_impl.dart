@@ -1,6 +1,6 @@
-import 'package:clean_architecture_todo_app/domain/model/todo_id.dart';
-import 'package:clean_architecture_todo_app/domain/repository/todos_repository.dart';
-import 'package:clean_architecture_todo_app/domain/usecase/update_todo_usecase.dart';
+import '../model/todo_id.dart';
+import '../repository/todos_repository.dart';
+import 'update_todo_usecase.dart';
 
 class UpdateTodoUseCaseImpl implements UpdateTodoUseCase {
   final TodosRepository _repository;
