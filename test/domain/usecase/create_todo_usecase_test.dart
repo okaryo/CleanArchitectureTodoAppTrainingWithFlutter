@@ -9,25 +9,25 @@ import 'package:mockito/mockito.dart';
 import '../../mock/domain/repository/todos_repository_mock.mocks.dart';
 
 void main() {
-  final TodosRepository _repository = MockTodosRepository();
-  final CreateTodoUseCase _usecase = CreateTodoUseCaseImpl(_repository);
-  final _date = DateTime.now();
-  final _todo = Todo(
+  final TodosRepository repository = MockTodosRepository();
+  final CreateTodoUseCase usecase = CreateTodoUseCaseImpl(repository);
+  final date = DateTime.now();
+  final todo = Todo(
     id: const TodoId(value: 1),
     title: 'title',
     description: 'description',
     isCompleted: false,
-    dueDate: _date,
+    dueDate: date,
   );
 
   setUp(() {
-    when(_repository.createTodo('title', 'description', false, _date)).thenAnswer((_) async => _todo);
+    when(repository.createTodo('title', 'description', false, date)).thenAnswer((_) async => todo);
   });
 
   test('should return Todo', () async {
-    final expected = await _usecase.execute('title', 'description', false, _date);
-    final actual = _todo;
+    final expected = await usecase.execute('title', 'description', false, date);
+    final actual = todo;
     expect(expected, actual);
-    verify(_repository.createTodo('title', 'description', false, _date));
+    verify(repository.createTodo('title', 'description', false, date));
   });
 }

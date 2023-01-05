@@ -4,16 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
-class TodoFormPage extends StatefulWidget {
+class TodoFormPage extends ConsumerStatefulWidget {
   final Todo? _todo;
 
   const TodoFormPage(this._todo);
 
   @override
-  State<StatefulWidget> createState() => _TodoFormPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _TodoFormPageState();
 }
 
-class _TodoFormPageState extends State<TodoFormPage> {
+class _TodoFormPageState extends ConsumerState<TodoFormPage> {
   late final TodoFormViewModel _viewModel;
   final _formKey = GlobalKey<FormState>();
   final _dueDateFormFocusNode = _DisabledFocusNode();
@@ -25,7 +25,7 @@ class _TodoFormPageState extends State<TodoFormPage> {
   void initState() {
     super.initState();
 
-    _viewModel = context.read(todoFormViewModelProvider(widget._todo));
+    _viewModel = ref.read(todoFormViewModelProvider(widget._todo));
     _dueDateTextFieldController = TextEditingController(
       text: DateFormat('yyyy/MM/dd').format(_viewModel.initialDueDateValue()),
     );
@@ -184,7 +184,10 @@ class _TodoFormPageState extends State<TodoFormPage> {
     );
     if (result) {
       _viewModel.deleteTodo();
-      Navigator.pop(context);
+
+      if (mounted) {
+        Navigator.pop(context);
+      }
     }
   }
 }

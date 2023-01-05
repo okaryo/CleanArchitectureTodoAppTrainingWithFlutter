@@ -10,12 +10,12 @@ import 'package:mockito/mockito.dart';
 import '../../mock/domain/repository/todos_repository_mock.mocks.dart';
 
 void main() {
-  final TodosRepository _repository = MockTodosRepository();
-  final _date = DateTime.now();
-  final GetTodoListUseCase _usecase = GetTodoListUseCaseImpl(_repository);
+  final TodosRepository repository = MockTodosRepository();
+  final date = DateTime.now();
+  final GetTodoListUseCase usecase = GetTodoListUseCaseImpl(repository);
 
   setUp(() {
-    when(_repository.getTodoList()).thenAnswer(
+    when(repository.getTodoList()).thenAnswer(
       (_) async => TodoList(
         values: [
           Todo(
@@ -23,7 +23,7 @@ void main() {
             title: 'title',
             description: 'description',
             isCompleted: false,
-            dueDate: _date,
+            dueDate: date,
           ),
         ],
       ),
@@ -33,12 +33,11 @@ void main() {
   test('should return TodoList', () async {
     final expected = TodoList(
       values: [
-        Todo(
-            id: const TodoId(value: 1), title: 'title', description: 'description', isCompleted: false, dueDate: _date),
+        Todo(id: const TodoId(value: 1), title: 'title', description: 'description', isCompleted: false, dueDate: date),
       ],
     );
-    final actual = await _usecase.execute();
+    final actual = await usecase.execute();
     expect(expected, actual);
-    verify(_repository.getTodoList()).called(1);
+    verify(repository.getTodoList()).called(1);
   });
 }

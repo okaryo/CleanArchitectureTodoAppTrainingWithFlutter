@@ -8,34 +8,34 @@ import 'package:mockito/mockito.dart';
 import '../../mock/domain/repository/todos_repository_mock.mocks.dart';
 
 void main() {
-  final TodosRepository _repository = MockTodosRepository();
-  final UpdateTodoUseCase _usecase = UpdateTodoUseCaseImpl(_repository);
-  final _date = DateTime.now();
+  final TodosRepository repository = MockTodosRepository();
+  final UpdateTodoUseCase usecase = UpdateTodoUseCaseImpl(repository);
+  final date = DateTime.now();
 
   setUp(() {
-    when(_repository.updateTodo(
+    when(repository.updateTodo(
       const TodoId(value: 1),
       'title',
       'description',
       true,
-      _date,
+      date,
     )).thenAnswer((_) async => {});
   });
 
   test('should return void', () async {
-    await _usecase.execute(
+    await usecase.execute(
       const TodoId(value: 1),
       'title',
       'description',
       true,
-      _date,
+      date,
     );
-    verify(_repository.updateTodo(
+    verify(repository.updateTodo(
       const TodoId(value: 1),
       'title',
       'description',
       true,
-      _date,
+      date,
     )).called(1);
   });
 }
