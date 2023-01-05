@@ -3,21 +3,23 @@ import 'package:clean_architecture_todo_app/domain/model/todo_id.dart';
 import 'package:clean_architecture_todo_app/presentation/viewmodel/todolist/todo_list_viewmodel.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final todoFormViewModelProvider = Provider.autoDispose.family<TodoFormViewModel, Todo?>((ref, todo) {
-  return TodoFormViewModel(ref.read, todo);
+final todoFormViewModelProvider =
+    Provider.autoDispose.family<TodoFormViewModel, Todo?>((ref, todo) {
+  final todoListViewModel =
+      ref.watch(todoListViewModelStateNotifierProvider.notifier);
+  return TodoFormViewModel(todo, todoListViewModel);
 });
 
 class TodoFormViewModel {
-  late final TodoListViewModel _todoListViewModel;
   late TodoId _id;
+  final TodoListViewModel _todoListViewModel;
   var _title = '';
   var _description = '';
   var _isCompleted = false;
   var _dueDate = DateTime.now();
   var _isNewTodo = false;
 
-  TodoFormViewModel(final Reader read, final Todo? todo) {
-    _todoListViewModel = read(todoListViewModelStateNotifierProvider.notifier);
+  TodoFormViewModel(final Todo? todo, this._todoListViewModel) {
     _initTodo(todo);
   }
 

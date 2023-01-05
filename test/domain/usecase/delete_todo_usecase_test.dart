@@ -8,15 +8,15 @@ import 'package:mockito/mockito.dart';
 import '../../mock/domain/repository/todos_repository_mock.mocks.dart';
 
 void main() {
-  final TodosRepository _repository = MockTodosRepository();
-  final DeleteTodoUseCase _usecase = DeleteTodoUseCaseImpl(_repository);
+  final TodosRepository repository = MockTodosRepository();
+  final DeleteTodoUseCase usecase = DeleteTodoUseCaseImpl(repository);
 
   setUp(() {
-    when(_repository.deleteTodo(const TodoId(value: 1))).thenAnswer((_) async => {});
+    when(repository.deleteTodo(const TodoId(value: 1))).thenAnswer((_) async => {});
   });
 
   test('should return void', () async {
-    await _usecase.execute(const TodoId(value: 1));
-    verify(_repository.deleteTodo(const TodoId(value: 1))).called(1);
+    await usecase.execute(const TodoId(value: 1));
+    verify(repository.deleteTodo(const TodoId(value: 1))).called(1);
   });
 }

@@ -22,12 +22,12 @@ class TodoListPage extends StatelessWidget {
           ChipsBarWidget(),
           const Divider(height: 2, color: Colors.grey),
           Consumer(
-            builder: (context, watch, _) {
-              return watch(_filteredTodoListProvider).maybeWhen(
-                success: (content) => _buildTodoListContainerWidget(context, content),
-                error: (_) => _buildErrorWidget(),
-                orElse: () => const Expanded(child: Center(child: CircularProgressIndicator())),
-              );
+            builder: (context, ref, _) {
+              return ref.watch(_filteredTodoListProvider).maybeWhen(
+                    success: (content) => _buildTodoListContainerWidget(ref, content),
+                    error: (_) => _buildErrorWidget(),
+                    orElse: () => const Expanded(child: Center(child: CircularProgressIndicator())),
+                  );
             },
           ),
         ],
@@ -36,11 +36,11 @@ class TodoListPage extends StatelessWidget {
     );
   }
 
-  Widget _buildTodoListContainerWidget(final BuildContext context, final TodoList todoList) {
-    return Expanded(child: _buildTodoListWidget(context, todoList));
+  Widget _buildTodoListContainerWidget(WidgetRef ref, final TodoList todoList) {
+    return Expanded(child: _buildTodoListWidget(ref, todoList));
   }
 
-  Widget _buildTodoListWidget(final BuildContext context, final TodoList todoList) {
+  Widget _buildTodoListWidget(final WidgetRef ref, final TodoList todoList) {
     if (todoList.length == 0) {
       return const Center(child: Text('No ToDo'));
     } else {
@@ -50,13 +50,13 @@ class TodoListPage extends StatelessWidget {
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         itemBuilder: (final BuildContext context, final int index) {
-          return _buildTodoItemCardWidget(context, todoList[index]);
+          return _buildTodoItemCardWidget(context, ref, todoList[index]);
         },
       );
     }
   }
 
-  Widget _buildTodoItemCardWidget(final BuildContext context, final Todo todo) {
+  Widget _buildTodoItemCardWidget(final BuildContext context, final WidgetRef ref, final Todo todo) {
     return InkWell(
       child: Card(
         child: Padding(
@@ -87,7 +87,7 @@ class TodoListPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 8),
-              todo.isCompleted ? _buildCheckedIcon(context, todo) : _buildUncheckedIcon(context, todo),
+              todo.isCompleted ? _buildCheckedIcon(ref, todo) : _buildUncheckedIcon(ref, todo),
             ],
           ),
         ),
@@ -100,19 +100,23 @@ class TodoListPage extends StatelessWidget {
     );
   }
 
-  Widget _buildCheckedIcon(final BuildContext context, final Todo todo) {
+  Widget _buildCheckedIcon(final WidgetRef ref, final Todo todo) {
     return InkResponse(
-      child: const Icon(Icons.done, size: 24, color: Colors.lightGreen),
-      onTap: () => context.read(_todoListProvider.notifier).undoTodo(todo),
+      onTap: () => ref.watch(_todoListProvider.notifier).undoTodo(todo),
       splashColor: Colors.transparent,
+      child: const Icon(Icons.done, size: 24, color: Colors.lightGreen),
     );
   }
 
-  Widget _buildUncheckedIcon(final BuildContext context, final Todo todo) {
+  Widget _buildUncheckedIcon(final WidgetRef ref, final Todo todo) {
     return InkResponse(
-      child: const Icon(Icons.radio_button_off_rounded, size: 24, color: Colors.grey),
-      onTap: () => context.read(_todoListProvider.notifier).completeTodo(todo),
+      onTap: () => ref.watch(_todoListProvider.notifier).completeTodo(todo),
       splashColor: Colors.transparent,
+      child: const Icon(
+        Icons.radio_button_off_rounded,
+        size: 24,
+        color: Colors.grey,
+      ),
     );
   }
 
@@ -139,9 +143,9 @@ class ChipsBarWidget extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     return Consumer(
-      builder: (context, watch, _) {
-        final viewModel = watch(_provider.notifier);
-        watch(_provider);
+      builder: (context, ref, _) {
+        final viewModel = ref.watch(_provider.notifier);
+        ref.watch(_provider);
         return SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.only(left: 8, right: 8),
