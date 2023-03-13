@@ -1,6 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../domain/model/todo.dart';
+import '../../utils/constants.dart';
 import '../todolist/todo_list.dart';
 import 'package:intl/intl.dart';
 
@@ -8,8 +9,8 @@ part 'todo_form.g.dart';
 
 @riverpod
 class TodoFormViewModel extends _$TodoFormViewModel {
-  late final TodoListViewModel todoListViewModel =
-      ref.watch(todoListViewModelProvider.notifier);
+  late final TodoListViewModel todoListViewModel = ref.watch(todoListViewModelProvider.notifier);
+
   int? _id;
   String _title = '';
   String? _description;
@@ -63,8 +64,7 @@ class TodoFormViewModel extends _$TodoFormViewModel {
 
   DateTime initialDueDateValue() => _dueDate;
 
-  String initialDueDateString() =>
-      DateFormat('yyyy/MM/dd').format(initialDueDateValue());
+  String initialDueDateString() => dateFormat.format(initialDueDateValue());
 
   DateTime datePickerFirstDate() => DateTime(DateTime.now().year - 5, 1, 1);
 

@@ -16,5 +16,14 @@
     "files.exclude": {
         "**/*.freezed.dart": true,
         "**/*.g.dart": true,
-    }
+    },
+    "dart.lineLength": 150,
+    "dart.flutterTestAdditionalArgs": [
+        "lib"
+    ],
+    "[dart]": {
+        "editor.rulers": [
+            150
+        ]
+    },
 }

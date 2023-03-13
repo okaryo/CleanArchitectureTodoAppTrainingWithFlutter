@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 
 import '../../../domain/model/todo.dart';
+import '../../utils/constants.dart';
 import '../../viewmodel/todolist/todo_list.dart';
 
 class TodoCard extends ConsumerWidget {
@@ -27,7 +27,6 @@ class TodoCard extends ConsumerWidget {
         isThreeLine: todo.description.isNotEmpty,
         title: Text(todo.title),
         subtitle: Builder(builder: (context) {
-          final dateFormat = DateFormat('yyyy/MM/dd');
           final sb = StringBuffer();
           sb.write(dateFormat.format(todo.dueDate));
           sb.writeln();
