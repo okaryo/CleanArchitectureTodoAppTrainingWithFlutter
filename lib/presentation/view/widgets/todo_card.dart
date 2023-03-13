@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../domain/model/todo.dart';
-import '../../viewmodel/todolist/todo_list_viewmodel.dart';
+import '../../viewmodel/todolist/todo_list.dart';
 
-class TodoCard extends HookWidget {
-  TodoCard({
+class TodoCard extends ConsumerWidget {
+  const TodoCard({
     Key? key,
     required this.todo,
     required this.onTap,
@@ -16,11 +15,10 @@ class TodoCard extends HookWidget {
   final Todo todo;
   final VoidCallback onTap;
 
-  final _todoListProvider = todoListViewModelStateNotifierProvider;
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+
     return Card(
       clipBehavior: Clip.antiAlias,
       color: theme.colorScheme.surfaceVariant,
@@ -28,12 +26,22 @@ class TodoCard extends HookWidget {
         onTap: onTap,
         isThreeLine: todo.description.isNotEmpty,
         title: Text(todo.title),
-        subtitle: Text(DateFormat('yyyy/MM/dd').format(todo.dueDate) +
-            '\n${todo.description.isEmpty ? 'No Description' : todo.description}'),
+        subtitle: Builder(builder: (context) {
+          final dateFormat = DateFormat('yyyy/MM/dd');
+          final sb = StringBuffer();
+          sb.write(dateFormat.format(todo.dueDate));
+          sb.writeln();
+          if (todo.description.isEmpty) {
+            sb.write('No Description');
+          } else {
+            sb.write(todo.description);
+          }
+          return Text(sb.toString());
+        }),
         trailing: Checkbox(
           value: todo.isCompleted,
           onChanged: (value) {
-            final controller = context.read(_todoListProvider.notifier);
+            final controller = ref.read(todoListViewModelProvider.notifier);
             if (value == true) {
               controller.completeTodo(todo);
             } else {
@@ -44,4 +52,9 @@ class TodoCard extends HookWidget {
       ),
     );
   }
+}
+
+extension on String? {
+  bool get isEmpty => this == null || this!.isEmpty;
+  bool get isNotEmpty => !isEmpty;
 }

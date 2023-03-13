@@ -7,6 +7,9 @@ analyzer:
   errors:
     missing_required_param: warning
     missing_return: warning
+  enable-experiment:
+    - records
+    - patterns
 linter:
   rules:
     unnecessary_overrides: false

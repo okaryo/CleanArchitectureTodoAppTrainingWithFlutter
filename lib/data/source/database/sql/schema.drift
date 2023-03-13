@@ -1,0 +1,59 @@
+CREATE TABLE IF NOT EXISTS [todos] (
+   [id] INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+   [title] TEXT NOT NULL,
+   [description] TEXT,
+   [is_completed] INTEGER NOT NULL,
+   [due_date] TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS todos_due_date_idx ON todos(due_date);
+
+CREATE VIRTUAL TABLE todos_entries USING fts5 (
+    title,
+    description,
+    content=todos,
+    content_rowid=id
+);
+
+CREATE TRIGGER todos_insert AFTER INSERT ON todos BEGIN
+  INSERT INTO todos_entries(rowid, title, description) VALUES (new.id, new.title, new.description);
+END;
+
+CREATE TRIGGER todos_delete AFTER DELETE ON todos BEGIN
+  INSERT INTO todos_entries(todos_entries, rowid, title, description) VALUES ('delete', old.id, old.title, old.description);
+END;
+
+CREATE TRIGGER todos_update AFTER UPDATE ON todos BEGIN
+  INSERT INTO todos_entries(todos_entries, rowid, title, description) VALUES ('delete', new.id, new.title, new.description);
+  INSERT INTO todos_entries(rowid, title, description) VALUES (new.id, new.title, new.description);
+END;
+
+_searchTodos: SELECT r.** FROM todos_entries
+    INNER JOIN todos r ON r.id = todos_entries.rowid
+    WHERE todos_entries MATCH :query
+    ORDER BY rank;
+_getTodos: 
+    SELECT * FROM [todos];
+_getTodoById:
+    SELECT * FROM [todos]
+    WHERE id = :id
+    LIMIT 1;
+_getTodosByDate:
+    SELECT * FROM [todos]
+    WHERE due_date = :due_date;
+_insertTodo:
+    INSERT INTO [todos] (title, description, is_completed, due_date)
+    VALUES (:title, :description, :is_completed, :due_date);
+_updateTodo:
+    UPDATE [todos]
+    SET title = :title, description = :description, is_completed = :is_completed, due_date = :due_date
+    WHERE id = :id;
+_deleteTodo:
+    DELETE FROM [todos]
+    WHERE id = :id;
+_deleteCompletedTodos:
+    DELETE FROM [todos]
+    WHERE is_completed = 1;
+_deleteAllTodos:
+    DELETE FROM [todos];
+

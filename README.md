@@ -25,3 +25,9 @@ Please let me know if there's anything I can do to improve it, or any other bett
 - performance
 - error handling
 - UI/UX
+
+## Screenshots
+
+![](/screenshots/desktop.png)
+![](/screenshots/light.png)
+![](/screenshots/dark.png)

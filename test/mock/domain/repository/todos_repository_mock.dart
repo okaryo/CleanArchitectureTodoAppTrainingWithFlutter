@@ -1,5 +1,3 @@
-import 'package:clean_architecture_todo_app/domain/repository/todos_repository.dart';
-import 'package:mockito/annotations.dart';
+import 'package:clean_architecture_todo_app/domain/repository/todos.dart';
 
-@GenerateMocks([TodosRepository])
 void main() {}

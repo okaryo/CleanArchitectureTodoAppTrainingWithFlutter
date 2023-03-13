@@ -1,8 +1,8 @@
 import 'package:clean_architecture_todo_app/domain/model/todo.dart';
 import 'package:clean_architecture_todo_app/domain/model/todo_id.dart';
-import 'package:clean_architecture_todo_app/domain/repository/todos_repository.dart';
-import 'package:clean_architecture_todo_app/domain/usecase/create_todo_usecase.dart';
-import 'package:clean_architecture_todo_app/domain/usecase/create_todo_usecase_impl.dart';
+import 'package:clean_architecture_todo_app/domain/repository/todos.dart';
+import 'package:clean_architecture_todo_app/domain/usecase/create_todo.dart';
+import 'package:clean_architecture_todo_app/domain/usecase/create_todo_impl.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 

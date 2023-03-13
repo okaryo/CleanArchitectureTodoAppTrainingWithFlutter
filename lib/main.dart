@@ -1,13 +1,9 @@
-import 'presentation/view/todo_list_page.dart';
+import 'presentation/view/todo_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() {
-  runApp(
-    ProviderScope(
-      child: MainApp(),
-    ),
-  );
+  runApp(ProviderScope(child: MainApp()));
 }
 
 class MainApp extends StatelessWidget {
