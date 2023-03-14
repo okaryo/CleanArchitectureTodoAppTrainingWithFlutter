@@ -3,28 +3,44 @@
 [![github pages](https://github.com/rodydavis/clean_architecture_todo_app/actions/workflows/main.yml/badge.svg)](https://github.com/rodydavis/clean_architecture_todo_app/actions/workflows/main.yml)
 [![Test and Lint](https://github.com/rodydavis/clean_architecture_todo_app/actions/workflows/test-and-lint.yml/badge.svg)](https://github.com/rodydavis/clean_architecture_todo_app/actions/workflows/test-and-lint.yml)
 
-Flutter + Clean Architecture + sqflite + riverpod + state_notifier + freezed!
+Flutter + Clean Architecture + riverpod + drift!
 
 [Online Demo](https://rodydavis.github.io/clean_architecture_todo_app/)!
 
 ## Motivation
 
-I wanted to practice making a flutter app using riverpod and state_notifier with CleanArchitecture.
-
-## UI
-
-https://user-images.githubusercontent.com/44517313/126060424-7057afec-6d51-496f-ae43-8a4476d7b852.mp4
+Based on a [fork](https://github.com/okaryo/CleanArchitectureTodoAppTrainingWithFlutter) and updated for the latest version of Material 3, Riverpod and Drift.
 
 ## Architecture Diagram
 
-Please let me know if there's anything I can do to improve it, or any other better ways!
-![architecture](https://user-images.githubusercontent.com/44517313/133893713-b6bf0908-2182-4365-af5d-303ac5396215.png)
+```mermaid
+flowchart TD
+    subgraph Presentation
+    V[View]-->VM(View Model)
+    W[Widgets]-->V[View]
+    end
+    subgraph Domain
+    VM[View Model]-->U(Use Case)
+    UI(Use Case Impl)-->U[Use Case]
+    UI(Use Case Impl)-->MD[Model]
+    UI(Use Case Impl)-->R[Repository]
+    end
+    subgraph Data
+    RI[Repository Impl]-->MP[Mapper]
+    RI[Repository Impl]-->R[Repository]
+    RI[Repository Impl]-->D[Database]
+    DI[Database Impl]-->D[Database]
+    RI[Repository Impl]-->E[Entity]
+    end
+```
 
-## No Consideration
+## Features
 
-- performance
-- error handling
-- UI/UX
+- Riverpod
+- Drift (SQLite)
+- Material 3
+- Adaptive Layouts
+- All 6 platforms supported
 
 ## Screenshots
 
