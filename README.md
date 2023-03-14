@@ -15,22 +15,23 @@ Based on a [fork](https://github.com/okaryo/CleanArchitectureTodoAppTrainingWith
 
 ```mermaid
 flowchart TD
+    VM[View Model]-->U(Use Case)
+    MP[Mapper]-->MD[Model]
     subgraph Presentation
     V[View]-->VM(View Model)
     W[Widgets]-->V[View]
     end
     subgraph Domain
-    VM[View Model]-->U(Use Case)
     UI(Use Case Impl)-->U[Use Case]
-    UI(Use Case Impl)-->MD[Model]
+    U[Use Case]-->MD[Model]-->R[Repository]
     UI(Use Case Impl)-->R[Repository]
     end
     subgraph Data
     RI[Repository Impl]-->MP[Mapper]
     RI[Repository Impl]-->R[Repository]
-    RI[Repository Impl]-->D[Database]
+    E(Entity)-->D[Database]
     DI[Database Impl]-->D[Database]
-    RI[Repository Impl]-->E[Entity]
+    RI[Repository Impl]-->E(Entity)
     end
 ```
 
