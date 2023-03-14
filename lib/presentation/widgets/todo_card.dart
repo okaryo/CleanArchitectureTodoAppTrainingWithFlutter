@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../domain/model/todo.dart';
-import '../../utils/constants.dart';
-import '../../viewmodel/todolist/todo_list.dart';
+import '../utils/constants.dart';
+import '../viewmodel/todolist/todo_list.dart';
 
 class TodoCard extends ConsumerWidget {
   const TodoCard({

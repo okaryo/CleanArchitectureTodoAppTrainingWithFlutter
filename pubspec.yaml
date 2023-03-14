@@ -37,6 +37,7 @@ dependencies:
   hooks_riverpod: ^2.3.2
   flutter_hooks: ^0.18.6
   path: ^1.8.3
+  go_router: ^6.2.0
 
 dev_dependencies:
   flutter_test:

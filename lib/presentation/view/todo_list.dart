@@ -7,8 +7,8 @@ import '../viewmodel/todolist/todo_list.dart';
 import '../widgets/master_detail.dart';
 import 'search_todo_list.dart';
 import 'todo_form.dart';
-import 'widgets/chips_bar.dart';
-import 'widgets/todo_card.dart';
+import '../widgets/chips_bar.dart';
+import '../widgets/todo_card.dart';
 
 class TodoListPage extends ConsumerWidget {
   @override

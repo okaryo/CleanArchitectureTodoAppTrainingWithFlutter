@@ -4,7 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../viewmodel/todolist/search_todo_list.dart';
 import 'todo_form.dart';
-import 'widgets/todo_card.dart';
+import '../widgets/todo_card.dart';
 
 class SearchTodoList extends HookConsumerWidget {
   const SearchTodoList({super.key});

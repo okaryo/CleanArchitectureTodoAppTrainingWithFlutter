@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../viewmodel/todolist/filter_kind.dart';
+import '../viewmodel/todolist/filter_kind.dart';
 
 class ChipsBarWidget extends ConsumerWidget {
   @override
@@ -50,9 +50,7 @@ class ChipsBarWidget extends ConsumerWidget {
       selected: checked,
       onSelected: (_) => onSelect(),
       selectedColor: checked ? Theme.of(context).colorScheme.tertiary : null,
-      labelStyle: checked
-          ? TextStyle(color: Theme.of(context).colorScheme.onTertiary)
-          : null,
+      labelStyle: checked ? TextStyle(color: Theme.of(context).colorScheme.onTertiary) : null,
       checkmarkColor: checked ? Theme.of(context).colorScheme.onTertiary : null,
     );
   }
