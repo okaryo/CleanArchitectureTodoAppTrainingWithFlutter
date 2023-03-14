@@ -19,4 +19,6 @@ abstract class TodosRepository {
   });
 
   Future<void> deleteTodo(final int id);
+
+  Future<void> deleteAllCompleted();
 }

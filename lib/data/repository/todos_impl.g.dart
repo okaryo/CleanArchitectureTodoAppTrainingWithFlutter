@@ -7,7 +7,7 @@ part of 'todos_impl.dart';
 // **************************************************************************
 
 String _$todosRepositoryImplHash() =>
-    r'f05c3135713602a45b414a0b2f458505976217f6';
+    r'a5bb2f42de28d8211e7cb64a9ed380e59c4e7e64';
 
 /// See also [TodosRepositoryImpl].
 @ProviderFor(TodosRepositoryImpl)

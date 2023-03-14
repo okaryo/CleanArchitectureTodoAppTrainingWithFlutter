@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../domain/model/todo.dart';
 
 import '../viewmodel/todolist/todo_list.dart';
+import '../widgets/actions.dart';
 import '../widgets/master_detail.dart';
 import 'search_todo_list.dart';
 import 'todo_form.dart';
@@ -22,6 +23,23 @@ class TodoListPage extends ConsumerWidget {
         appBar: AppBar(
           title: const Text('TODO App'),
           actions: [
+            IconButton(
+              icon: const Icon(Icons.delete_sweep),
+              tooltip: 'Delete Completed TODO',
+              onPressed: () async {
+                final messenger = ScaffoldMessenger.of(context);
+                final deleteAll = await confirm(
+                  context,
+                  title: 'Warning',
+                  content: 'Delete all completed TODO?',
+                );
+                if (deleteAll) {
+                  final model = ref.watch(todoListViewModelProvider.notifier);
+                  await model.deleteCompletedTodos();
+                  messenger.showSnackBar(const SnackBar(content: Text('All completed TODO deleted')));
+                }
+              },
+            ),
             IconButton(
               icon: const Icon(Icons.search),
               tooltip: 'Search TODO',

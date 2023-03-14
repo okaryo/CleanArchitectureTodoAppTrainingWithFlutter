@@ -18,6 +18,11 @@ class TodosRepositoryImpl extends _$TodosRepositoryImpl implements TodosReposito
   }
 
   @override
+  Future<void> deleteAllCompleted() {
+    return database.deleteCompletedTodos();
+  }
+
+  @override
   Future<List<Todo>> searchTodos(String query) async {
     if (query.isEmpty) return [];
     // Full text search

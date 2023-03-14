@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/model/todo.dart';
 import '../utils/constants.dart';
 import '../viewmodel/todoform/todo_form.dart';
+import '../widgets/actions.dart';
 import '../widgets/forms.dart';
 
 class TodoFormPage extends ConsumerStatefulWidget {
@@ -102,32 +103,17 @@ class _TodoFormPageState extends ConsumerState<TodoFormPage> {
             onWillPop: () async {
               final modified = viewModel.isEdited;
               if (modified) {
-                final result = await showDialog<bool>(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: const Text('Discard changes?'),
-                    content: const Text(
-                        'Are you sure you want to discard your changes?'),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(context, false),
-                        child: const Text('No'),
-                      ),
-                      TextButton(
-                        onPressed: () => Navigator.pop(context, true),
-                        child: const Text('Yes'),
-                      ),
-                    ],
-                  ),
+                return confirm(
+                  context,
+                  title: 'Discard changes?',
+                  content: 'Are you sure you want to discard your changes?',
                 );
-                return result ?? false;
               }
               return true;
             },
             autovalidateMode: AutovalidateMode.always,
             child: Container(
-              padding: const EdgeInsets.only(
-                  left: 16, top: 24, right: 16, bottom: 16),
+              padding: const EdgeInsets.only(left: 16, top: 24, right: 16, bottom: 16),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -205,13 +191,11 @@ class _TodoFormPageState extends ConsumerState<TodoFormPage> {
                                 );
                                 if (selectedDate != null) {
                                   viewModel.setDueDate(selectedDate);
-                                  controller.text =
-                                      dateFormat.format(selectedDate);
+                                  controller.text = dateFormat.format(selectedDate);
                                 }
                               },
                               validator: (value) {
-                                if (viewModel.isNew &&
-                                    data.dueDate.isBefore(DateTime.now())) {
+                                if (viewModel.isNew && data.dueDate.isBefore(DateTime.now())) {
                                   return "DueDate must be after today's date.";
                                 } else {
                                   return null;

@@ -2,6 +2,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../domain/model/todo.dart';
 import '../../../domain/usecase/create_todo_impl.dart';
+import '../../../domain/usecase/delete_completed_todos_impl.dart';
 import '../../../domain/usecase/delete_todo_impl.dart';
 import '../../../domain/usecase/get_todo_list_impl.dart';
 import '../../../domain/usecase/update_todo_impl.dart';
@@ -20,6 +21,10 @@ class TodoListViewModel extends _$TodoListViewModel {
   void undoTodo(final Todo todo) {
     final newTodo = todo.copyWith(isCompleted: false);
     updateTodo(newTodo);
+  }
+
+  Future<void> deleteCompletedTodos() async {
+    return ref.read(deleteCompletedTodosUseCaseImplProvider);
   }
 
   @override
