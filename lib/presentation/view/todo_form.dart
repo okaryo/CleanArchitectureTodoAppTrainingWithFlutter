@@ -7,6 +7,7 @@ import '../../domain/model/todo.dart';
 import '../utils/constants.dart';
 import '../viewmodel/todoform/todo_form.dart';
 import '../widgets/actions.dart';
+import '../widgets/article.dart';
 import '../widgets/forms.dart';
 
 class TodoFormPage extends ConsumerStatefulWidget {
@@ -84,12 +85,7 @@ class _TodoFormPageState extends ConsumerState<TodoFormPage> {
         ],
       ),
       body: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(
-            minWidth: 200,
-            maxWidth: 800,
-          ),
-          // child: _buildBodyWidget(),
+        child: ArticleWidget(
           child: Form(
             key: _formKey,
             onChanged: () {
