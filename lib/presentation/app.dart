@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'router.dart';
-import 'utils/theme.dart';
+import 'theme.dart';
 
 class TodoApp extends StatelessWidget {
   @override

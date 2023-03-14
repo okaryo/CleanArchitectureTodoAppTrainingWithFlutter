@@ -56,15 +56,22 @@ class TodoListPage extends ConsumerWidget {
             ChipsBarWidget(),
             Divider(height: 2, color: theme.colorScheme.outlineVariant),
             Expanded(
-              child: ListView.builder(
-                padding: const EdgeInsets.all(8),
-                itemCount: todos.length,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) => TodoCard(
-                  todo: todos[index],
-                  onTap: () => onSelect(todos[index]),
-                ),
+              child: Builder(
+                builder: (context) {
+                  if (todos.isEmpty) {
+                    return const Center(child: Text('No TODO found'));
+                  }
+                  return ListView.builder(
+                    padding: const EdgeInsets.all(8),
+                    itemCount: todos.length,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) => TodoCard(
+                      todo: todos[index],
+                      onTap: () => onSelect(todos[index]),
+                    ),
+                  );
+                },
               ),
             ),
           ],
