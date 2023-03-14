@@ -37,10 +37,14 @@ flowchart TD
 ## Features
 
 - Riverpod
+- Riverpod Generator (StreamNotifier/FutureNotifier)
 - Drift (SQLite)
 - Material 3
 - Adaptive Layouts
 - All 6 platforms supported
+- Full text search
+- SQL support
+- Dart Code Generation
 
 ## Screenshots
 
