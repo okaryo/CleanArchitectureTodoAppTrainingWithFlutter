@@ -2,71 +2,84 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 
 import '../../domain/model/todo.dart';
+import '../utils/constants.dart';
 import '../viewmodel/todoform/todo_form.dart';
+import '../widgets/forms.dart';
 
 class TodoFormPage extends ConsumerStatefulWidget {
-  final Todo? todo;
-  final bool showSave;
-
   const TodoFormPage({
     Key? key,
     this.todo,
     this.showSave = true,
   }) : super(key: key);
 
+  final Todo? todo;
+  final bool showSave;
+
   @override
   ConsumerState<TodoFormPage> createState() => _TodoFormPageState();
 }
 
 class _TodoFormPageState extends ConsumerState<TodoFormPage> {
+  late TodoFormViewModel viewModel;
   final _formKey = GlobalKey<FormState>();
-  final _dueDateFormFocusNode = _DisabledFocusNode();
-  TextEditingController? _dueDateTextFieldController;
-  TodoFormViewModel? _viewModel;
   Timer? _debounce;
-
-  _TodoFormPageState();
 
   @override
   void initState() {
+    viewModel = ref.read(todoFormViewModelProvider(widget.todo).notifier);
     super.initState();
-
-    init();
-  }
-
-  void init() {
-    _viewModel = ref.read(todoFormViewModelProvider(widget.todo).notifier);
-    _dueDateTextFieldController = TextEditingController(
-      text: _viewModel!.initialDueDateString(),
-    );
-  }
-
-  @override
-  void dispose() {
-    _dueDateFormFocusNode.dispose();
-    super.dispose();
   }
 
   @override
   void didUpdateWidget(covariant TodoFormPage oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.todo != widget.todo) {
-      init();
       _formKey.currentState?.reset();
+      viewModel = ref.watch(todoFormViewModelProvider(widget.todo).notifier);
     }
   }
 
   @override
   Widget build(final BuildContext context) {
+    final data = ref.watch(todoFormViewModelProvider(widget.todo));
     return Scaffold(
       appBar: AppBar(
-        title: Text(_viewModel!.appBarTitle()),
+        title: Text(viewModel.isNew ? 'Add TODO' : 'Edit TODO'),
         actions: [
-          if (_viewModel!.shouldShowDeleteTodoIcon())
-            _buildDeleteTodoIconWidget(),
+          if (viewModel.canDelete()) ...[
+            IconButton(
+              tooltip: 'Delete Todo',
+              onPressed: () async {
+                final nav = Navigator.of(context);
+                final bool result = await showDialog(
+                  context: context,
+                  builder: (_) {
+                    return AlertDialog(
+                      content: const Text('Delete TODO?'),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, false),
+                          child: const Text('CANCEL'),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, true),
+                          child: const Text('DELETE'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+                if (result) {
+                  await viewModel.deleteTodo();
+                  nav.pop();
+                }
+              },
+              icon: const Icon(Icons.delete),
+            ),
+          ],
         ],
       ),
       body: Center(
@@ -75,167 +88,176 @@ class _TodoFormPageState extends ConsumerState<TodoFormPage> {
             minWidth: 200,
             maxWidth: 800,
           ),
-          child: _buildBodyWidget(),
+          // child: _buildBodyWidget(),
+          child: Form(
+            key: _formKey,
+            onChanged: () {
+              if (!widget.showSave) {
+                _debounce?.cancel();
+                _debounce = Timer(const Duration(milliseconds: 500), () {
+                  _save(context);
+                });
+              }
+            },
+            onWillPop: () async {
+              final modified = viewModel.isEdited;
+              if (modified) {
+                final result = await showDialog<bool>(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text('Discard changes?'),
+                    content: const Text(
+                        'Are you sure you want to discard your changes?'),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, false),
+                        child: const Text('No'),
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, true),
+                        child: const Text('Yes'),
+                      ),
+                    ],
+                  ),
+                );
+                return result ?? false;
+              }
+              return true;
+            },
+            autovalidateMode: AutovalidateMode.always,
+            child: Container(
+              padding: const EdgeInsets.only(
+                  left: 16, top: 24, right: 16, bottom: 16),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Column(
+                      children: [
+                        StringFormField(
+                          label: 'Title',
+                          value: data.title,
+                          onChanged: viewModel.setTitle,
+                          builder: (context, controller) {
+                            return TextFormField(
+                              controller: controller,
+                              maxLength: 150,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Enter a title.';
+                                } else if (value.length > 20) {
+                                  return 'Limit the title to 20 characters.';
+                                } else {
+                                  return null;
+                                }
+                              },
+                              decoration: const InputDecoration(
+                                icon: Icon(Icons.title),
+                                labelText: 'Title',
+                                border: OutlineInputBorder(),
+                              ),
+                            );
+                          },
+                        ),
+                        StringFormField(
+                          label: 'Description',
+                          value: data.description,
+                          onChanged: viewModel.setDescription,
+                          builder: (context, controller) {
+                            return TextFormField(
+                              controller: controller,
+                              maxLength: 150,
+                              validator: (value) {
+                                if (value != null && value.length > 100) {
+                                  return 'Limit the description to 100 characters.';
+                                } else {
+                                  return null;
+                                }
+                              },
+                              decoration: const InputDecoration(
+                                icon: Icon(Icons.view_headline),
+                                labelText: 'Description',
+                                border: OutlineInputBorder(),
+                              ),
+                            );
+                          },
+                        ),
+                        StringFormField(
+                          label: 'Due Date',
+                          value: dateFormat.format(data.dueDate),
+                          onChanged: (value) {
+                            if (value.isNotEmpty) {
+                              final date = DateTime.tryParse(value);
+                              if (date != null) viewModel.setDueDate(date);
+                            }
+                          },
+                          builder: (context, controller) {
+                            return TextFormField(
+                              focusNode: _DisabledFocusNode(),
+                              controller: controller,
+                              maxLength: 50,
+                              onTap: () async {
+                                final selectedDate = await showDatePicker(
+                                  context: context,
+                                  initialDate: data.dueDate,
+                                  firstDate: data.dueDate.pickerStartDate,
+                                  lastDate: data.dueDate.pickerEndDate,
+                                );
+                                if (selectedDate != null) {
+                                  viewModel.setDueDate(selectedDate);
+                                  controller.text =
+                                      dateFormat.format(selectedDate);
+                                }
+                              },
+                              validator: (value) {
+                                if (viewModel.isNew &&
+                                    data.dueDate.isBefore(DateTime.now())) {
+                                  return "DueDate must be after today's date.";
+                                } else {
+                                  return null;
+                                }
+                              },
+                              decoration: const InputDecoration(
+                                icon: Icon(Icons.calendar_today_rounded),
+                                labelText: 'DueDate',
+                                helperText: 'Required',
+                                border: OutlineInputBorder(),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (widget.showSave) ...[
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          final nav = Navigator.of(context);
+                          final valid = await _save(context);
+                          if (valid) nav.pop();
+                        },
+                        child: const Text('Save'),
+                      ),
+                    )
+                  ],
+                ],
+              ),
+            ),
+          ),
         ),
       ),
     );
   }
 
-  bool _save(BuildContext context) {
+  Future<bool> _save(BuildContext context) async {
     final currentState = _formKey.currentState;
     if (currentState != null && currentState.validate()) {
-      _viewModel!.createOrUpdateTodo();
+      await viewModel.createOrUpdateTodo();
       return true;
     }
     return false;
-  }
-
-  Widget _buildBodyWidget() {
-    return Container(
-      padding: const EdgeInsets.only(left: 16, top: 24, right: 16, bottom: 16),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          _buildFormWidget(),
-          if (widget.showSave) _buildSaveButtonWidget(),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSaveButtonWidget() {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton(
-        onPressed: () {
-          final valid = _save(context);
-          if (valid) {
-            Navigator.pop(context);
-          }
-        },
-        child: const Text('Save'),
-      ),
-    );
-  }
-
-  Widget _buildFormWidget() {
-    return Form(
-      key: _formKey,
-      onChanged: () {
-        if (!widget.showSave) {
-          _debounce?.cancel();
-          _debounce = Timer(const Duration(milliseconds: 500), () {
-            _save(context);
-          });
-        }
-      },
-      onWillPop: () async => _save(context),
-      autovalidateMode: AutovalidateMode.always,
-      child: Column(
-        children: [
-          _buildTitleFormWidget(),
-          const SizedBox(height: 16),
-          _buildDescriptionFormWidget(),
-          const SizedBox(height: 16),
-          _buildDueDateFormWidget()
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTitleFormWidget() {
-    return TextFormField(
-      initialValue: _viewModel!.initialTitleValue(),
-      maxLength: 20,
-      onChanged: (value) => _viewModel!.setTitle(value),
-      validator: (_) => _viewModel!.validateTitle(),
-      decoration: const InputDecoration(
-        icon: Icon(Icons.edit),
-        labelText: 'Title',
-        helperText: 'Required',
-        border: OutlineInputBorder(),
-      ),
-    );
-  }
-
-  Widget _buildDescriptionFormWidget() {
-    return TextFormField(
-      initialValue: _viewModel!.initialDescriptionValue(),
-      maxLength: 150,
-      onChanged: (value) => _viewModel!.setDescription(value),
-      validator: (_) => _viewModel!.validateDescription(),
-      decoration: const InputDecoration(
-        icon: Icon(Icons.view_headline),
-        labelText: 'Description',
-        border: OutlineInputBorder(),
-      ),
-    );
-  }
-
-  Widget _buildDueDateFormWidget() {
-    return TextFormField(
-      focusNode: _dueDateFormFocusNode,
-      controller: _dueDateTextFieldController,
-      maxLength: 50,
-      onTap: () => _showDatePicker(context),
-      onChanged: (value) => _viewModel!.setTitle(value),
-      validator: (_) => _viewModel!.validateDescription(),
-      decoration: const InputDecoration(
-        icon: Icon(Icons.calendar_today_rounded),
-        labelText: 'DueDate',
-        helperText: 'Required',
-        border: OutlineInputBorder(),
-      ),
-    );
-  }
-
-  Widget _buildDeleteTodoIconWidget() {
-    return IconButton(
-      tooltip: 'Delete Todo',
-      onPressed: () => _showConfirmDeleteTodoDialog(),
-      icon: const Icon(Icons.delete),
-    );
-  }
-
-  Future<DateTime?> _showDatePicker(final BuildContext context) async {
-    final selectedDate = await showDatePicker(
-      context: context,
-      initialDate: _viewModel!.initialDueDateValue(),
-      firstDate: _viewModel!.datePickerFirstDate(),
-      lastDate: _viewModel!.datePickerLastDate(),
-    );
-    if (selectedDate != null) {
-      _dueDateTextFieldController!.text =
-          DateFormat('yyyy/MM/dd').format(selectedDate);
-      _viewModel!.setDueDate(selectedDate);
-    }
-
-    return null;
-  }
-
-  _showConfirmDeleteTodoDialog() async {
-    final bool result = await showDialog(
-      context: context,
-      builder: (_) {
-        return AlertDialog(
-          content: const Text('Delete TODO?'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: const Text('CANCEL'),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(context, true),
-              child: const Text('DELETE'),
-            ),
-          ],
-        );
-      },
-    );
-    if (result) {
-      _viewModel!.deleteTodo();
-      Navigator.pop(context);
-    }
   }
 }
 

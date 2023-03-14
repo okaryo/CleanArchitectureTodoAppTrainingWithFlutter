@@ -11,14 +11,11 @@ class FilterKindViewModel extends StateNotifier<FilterKind> {
   FilterKindViewModel() : super(FilterKind.all);
 
   filterByAll() => state = FilterKind.all;
-
-  filterByCompleted() => state = FilterKind.completed;
-
-  filterByIncomplete() => state = FilterKind.incomplete;
-
   bool isFilteredByAll() => state == FilterKind.all;
 
+  filterByCompleted() => state = FilterKind.completed;
   bool isFilteredByCompleted() => state == FilterKind.completed;
 
+  filterByIncomplete() => state = FilterKind.incomplete;
   bool isFilteredByIncomplete() => state == FilterKind.incomplete;
 }

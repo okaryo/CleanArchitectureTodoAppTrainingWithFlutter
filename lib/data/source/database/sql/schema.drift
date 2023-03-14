@@ -28,8 +28,8 @@ CREATE TRIGGER todos_update AFTER UPDATE ON todos BEGIN
   INSERT INTO todos_entries(rowid, title, description) VALUES (new.id, new.title, new.description);
 END;
 
-_searchTodos: SELECT r.** FROM todos_entries
-    INNER JOIN todos r ON r.id = todos_entries.rowid
+_searchTodos: SELECT result.** FROM todos_entries
+    INNER JOIN todos result ON result.id = todos_entries.rowid
     WHERE todos_entries MATCH :query
     ORDER BY rank;
 _getTodos: 

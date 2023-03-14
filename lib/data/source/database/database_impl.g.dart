@@ -502,7 +502,7 @@ abstract class _$DatabaseImpl extends GeneratedDatabase {
       'todos_update');
   Selectable<SearchTodosResult> _searchTodos(String query) {
     return customSelect(
-        'SELECT"r"."id" AS "nested_0.id", "r"."title" AS "nested_0.title", "r"."description" AS "nested_0.description", "r"."is_completed" AS "nested_0.is_completed", "r"."due_date" AS "nested_0.due_date" FROM todos_entries INNER JOIN todos AS r ON r.id = todos_entries."rowid" WHERE todos_entries MATCH ?1 ORDER BY rank',
+        'SELECT"result"."id" AS "nested_0.id", "result"."title" AS "nested_0.title", "result"."description" AS "nested_0.description", "result"."is_completed" AS "nested_0.is_completed", "result"."due_date" AS "nested_0.due_date" FROM todos_entries INNER JOIN todos AS result ON result.id = todos_entries."rowid" WHERE todos_entries MATCH ?1 ORDER BY rank',
         variables: [
           Variable<String>(query)
         ],
@@ -511,7 +511,7 @@ abstract class _$DatabaseImpl extends GeneratedDatabase {
           todos,
         }).asyncMap((QueryRow row) async {
       return SearchTodosResult(
-        r: await todos.mapFromRow(row, tablePrefix: 'nested_0'),
+        result: await todos.mapFromRow(row, tablePrefix: 'nested_0'),
       );
     });
   }
@@ -638,8 +638,8 @@ abstract class _$DatabaseImpl extends GeneratedDatabase {
 }
 
 class SearchTodosResult {
-  final Todo r;
+  final Todo result;
   SearchTodosResult({
-    required this.r,
+    required this.result,
   });
 }

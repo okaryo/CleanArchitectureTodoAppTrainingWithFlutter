@@ -1,108 +1,104 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../domain/model/todo.dart';
-import '../../utils/constants.dart';
 import '../todolist/todo_list.dart';
-import 'package:intl/intl.dart';
 
 part 'todo_form.g.dart';
 
+typedef FormData = Map<String, dynamic>;
+
 @riverpod
 class TodoFormViewModel extends _$TodoFormViewModel {
-  late final TodoListViewModel todoListViewModel = ref.watch(todoListViewModelProvider.notifier);
+  late final TodoListViewModel todoListViewModel =
+      ref.watch(todoListViewModelProvider.notifier);
+  FormData _formData = {};
+  bool _edited = false;
 
-  int? _id;
-  String _title = '';
-  String? _description;
-  bool _isCompleted = false;
-  DateTime _dueDate = DateTime.now();
-
-  bool get isNew => _id == null;
+  bool get isNew => _formData.id == null;
+  bool get isEdited => _edited;
 
   @override
-  Future<void> build(Todo? todo) async {
-    if (todo == null) {
-      _id = null;
-    } else {
-      _id = todo.id;
-      _title = todo.title;
-      _description = todo.description;
-      _isCompleted = todo.isCompleted;
-      _dueDate = todo.dueDate;
-    }
+  FormData build(Todo? todo) {
+    return _formData = {
+      'id': todo?.id,
+      'title': todo?.title,
+      'description': todo?.description,
+      'isCompleted': todo?.isCompleted ?? false,
+      'dueDate': todo?.dueDate ?? DateTime.now(),
+    };
   }
 
-  void createOrUpdateTodo() {
-    if (_id != null) {
-      todoListViewModel.updateTodo(Todo(
-        id: _id!,
-        title: _title,
-        description: _description,
-        isCompleted: _isCompleted,
-        dueDate: _dueDate,
+  Future<void> createOrUpdateTodo() {
+    final id = _formData.id;
+    final title = _formData.title;
+    final description = _formData.description;
+    final isCompleted = _formData.isCompleted;
+    final dueDate = _formData.dueDate;
+
+    if (title == null) {
+      throw Exception('Title is null');
+    }
+
+    if (!isNew) {
+      return todoListViewModel.updateTodo(Todo(
+        id: id!,
+        title: title,
+        description: description,
+        isCompleted: isCompleted,
+        dueDate: dueDate,
       ));
     } else {
-      todoListViewModel.addTodo(
-        _title,
-        _description,
-        _isCompleted,
-        _dueDate,
+      return todoListViewModel.addTodo(
+        title,
+        description,
+        isCompleted,
+        dueDate,
       );
     }
   }
 
-  void deleteTodo() {
+  Future<void> deleteTodo() async {
     if (isNew) return;
-    todoListViewModel.deleteTodo(_id!);
+    final id = _formData.id;
+    return todoListViewModel.deleteTodo(id!);
   }
 
-  String appBarTitle() => isNew ? 'Add TODO' : 'Edit TODO';
+  bool canDelete() => !isNew;
 
-  String initialTitleValue() => _title;
-
-  String? initialDescriptionValue() => _description;
-
-  DateTime initialDueDateValue() => _dueDate;
-
-  String initialDueDateString() => dateFormat.format(initialDueDateValue());
-
-  DateTime datePickerFirstDate() => DateTime(DateTime.now().year - 5, 1, 1);
-
-  DateTime datePickerLastDate() => DateTime(DateTime.now().year + 5, 12, 31);
-
-  bool shouldShowDeleteTodoIcon() => !isNew;
-
-  void setTitle(final String value) => _title = value;
-
-  void setDescription(final String value) => _description = value;
-
-  void setTodoStatus(final bool status) => _isCompleted = status;
-
-  void setDueDate(final DateTime value) => _dueDate = value;
-
-  String? validateTitle() {
-    if (_title.isEmpty) {
-      return 'Enter a title.';
-    } else if (_title.length > 20) {
-      return 'Limit the title to 20 characters.';
-    } else {
-      return null;
-    }
+  void setTitle(String value) {
+    _formData['title'] = value;
+    _edited = true;
+    state = _formData;
   }
 
-  String? validateDescription() {
-    if (_description != null && _description!.length > 100) {
-      return 'Limit the description to 100 characters.';
-    } else {
-      return null;
-    }
+  void setDescription(String value) {
+    _formData['description'] = value;
+    _edited = true;
+    state = _formData;
   }
 
-  String? validateDueDate() {
-    if (isNew && _dueDate.isBefore(DateTime.now())) {
-      return "DueDate must be after today's date.";
-    } else {
-      return null;
-    }
+  void setTodoStatus(bool status) {
+    _formData['isCompleted'] = status;
+    _edited = true;
+    state = _formData;
   }
+
+  void setDueDate(DateTime value) {
+    _formData['dueDate'] = value;
+    _edited = true;
+    state = _formData;
+  }
+}
+
+extension DateUtils on DateTime {
+  DateTime get pickerStartDate => DateTime(year - 5, 1, 1);
+  DateTime get pickerEndDate => DateTime(year + 5, 12, 31);
+}
+
+extension FormDataUtils on FormData {
+  int? get id => this['id'];
+  String? get title => this['title'];
+  String? get description => this['description'];
+  bool get isCompleted => this['isCompleted'];
+  DateTime get dueDate => this['dueDate'];
 }

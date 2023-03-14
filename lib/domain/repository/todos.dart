@@ -1,7 +1,7 @@
 import '../model/todo.dart';
 
 abstract class TodosRepository {
-  // Future<List<Todo>> getTodos();
+  Future<List<Todo>> searchTodos(String query);
 
   Future<Todo> createTodo({
     required String title,

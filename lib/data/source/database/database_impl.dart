@@ -83,4 +83,9 @@ class DatabaseImpl extends _$DatabaseImpl implements Database {
       return _deleteAllTodos();
     });
   }
+
+  @override
+  Future<List<Todo>> searchTodos(String query) {
+    return _searchTodos(query).get().then((value) => value.map((e) => e.result).toList());
+  }
 }

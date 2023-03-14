@@ -1,12 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'todo_form.dart';
+part of 'search_todo_list.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$todoFormViewModelHash() => r'2c6c947c08ae6da9379001e27eb20308d704c33e';
+String _$searchTodoListViewModelHash() =>
+    r'1287d8cd647c62f606ba1db7e56c545763cec7c9';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -29,39 +30,39 @@ class _SystemHash {
   }
 }
 
-abstract class _$TodoFormViewModel
-    extends BuildlessAutoDisposeNotifier<Map<String, dynamic>> {
-  late final Todo? todo;
+abstract class _$SearchTodoListViewModel
+    extends BuildlessAutoDisposeAsyncNotifier<List<Todo>> {
+  late final String query;
 
-  Map<String, dynamic> build(
-    Todo? todo,
+  Future<List<Todo>> build(
+    String query,
   );
 }
 
-/// See also [TodoFormViewModel].
-@ProviderFor(TodoFormViewModel)
-const todoFormViewModelProvider = TodoFormViewModelFamily();
+/// See also [SearchTodoListViewModel].
+@ProviderFor(SearchTodoListViewModel)
+const searchTodoListViewModelProvider = SearchTodoListViewModelFamily();
 
-/// See also [TodoFormViewModel].
-class TodoFormViewModelFamily extends Family<Map<String, dynamic>> {
-  /// See also [TodoFormViewModel].
-  const TodoFormViewModelFamily();
+/// See also [SearchTodoListViewModel].
+class SearchTodoListViewModelFamily extends Family<AsyncValue<List<Todo>>> {
+  /// See also [SearchTodoListViewModel].
+  const SearchTodoListViewModelFamily();
 
-  /// See also [TodoFormViewModel].
-  TodoFormViewModelProvider call(
-    Todo? todo,
+  /// See also [SearchTodoListViewModel].
+  SearchTodoListViewModelProvider call(
+    String query,
   ) {
-    return TodoFormViewModelProvider(
-      todo,
+    return SearchTodoListViewModelProvider(
+      query,
     );
   }
 
   @override
-  TodoFormViewModelProvider getProviderOverride(
-    covariant TodoFormViewModelProvider provider,
+  SearchTodoListViewModelProvider getProviderOverride(
+    covariant SearchTodoListViewModelProvider provider,
   ) {
     return call(
-      provider.todo,
+      provider.query,
     );
   }
 
@@ -77,49 +78,50 @@ class TodoFormViewModelFamily extends Family<Map<String, dynamic>> {
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'todoFormViewModelProvider';
+  String? get name => r'searchTodoListViewModelProvider';
 }
 
-/// See also [TodoFormViewModel].
-class TodoFormViewModelProvider extends AutoDisposeNotifierProviderImpl<
-    TodoFormViewModel, Map<String, dynamic>> {
-  /// See also [TodoFormViewModel].
-  TodoFormViewModelProvider(
-    this.todo,
+/// See also [SearchTodoListViewModel].
+class SearchTodoListViewModelProvider
+    extends AutoDisposeAsyncNotifierProviderImpl<SearchTodoListViewModel,
+        List<Todo>> {
+  /// See also [SearchTodoListViewModel].
+  SearchTodoListViewModelProvider(
+    this.query,
   ) : super.internal(
-          () => TodoFormViewModel()..todo = todo,
-          from: todoFormViewModelProvider,
-          name: r'todoFormViewModelProvider',
+          () => SearchTodoListViewModel()..query = query,
+          from: searchTodoListViewModelProvider,
+          name: r'searchTodoListViewModelProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$todoFormViewModelHash,
-          dependencies: TodoFormViewModelFamily._dependencies,
+                  : _$searchTodoListViewModelHash,
+          dependencies: SearchTodoListViewModelFamily._dependencies,
           allTransitiveDependencies:
-              TodoFormViewModelFamily._allTransitiveDependencies,
+              SearchTodoListViewModelFamily._allTransitiveDependencies,
         );
 
-  final Todo? todo;
+  final String query;
 
   @override
   bool operator ==(Object other) {
-    return other is TodoFormViewModelProvider && other.todo == todo;
+    return other is SearchTodoListViewModelProvider && other.query == query;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, todo.hashCode);
+    hash = _SystemHash.combine(hash, query.hashCode);
 
     return _SystemHash.finish(hash);
   }
 
   @override
-  Map<String, dynamic> runNotifierBuild(
-    covariant TodoFormViewModel notifier,
+  Future<List<Todo>> runNotifierBuild(
+    covariant SearchTodoListViewModel notifier,
   ) {
     return notifier.build(
-      todo,
+      query,
     );
   }
 }

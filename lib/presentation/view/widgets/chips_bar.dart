@@ -10,29 +10,24 @@ class ChipsBarWidget extends ConsumerWidget {
     return SizedBox(
       height: kToolbarHeight,
       child: ListView(
-        padding: const EdgeInsets.only(
-          left: 8,
-          right: 8,
-          top: 3,
-          bottom: 3,
-        ),
+        padding: const EdgeInsets.only(left: 8, right: 8, top: 3, bottom: 3),
         scrollDirection: Axis.horizontal,
         children: [
-          buildChip(
+          buildGroupChip(
             context,
             viewModel.isFilteredByAll(),
             'All',
             viewModel.filterByAll,
           ),
           const SizedBox(width: 8),
-          buildChip(
+          buildGroupChip(
             context,
             viewModel.isFilteredByCompleted(),
             'Completed',
             viewModel.filterByCompleted,
           ),
           const SizedBox(width: 8),
-          buildChip(
+          buildGroupChip(
             context,
             viewModel.isFilteredByIncomplete(),
             'Incomplete',
@@ -43,7 +38,7 @@ class ChipsBarWidget extends ConsumerWidget {
     );
   }
 
-  Widget buildChip(
+  Widget buildGroupChip(
     BuildContext context,
     bool checked,
     String label,
@@ -56,9 +51,7 @@ class ChipsBarWidget extends ConsumerWidget {
       onSelected: (_) => onSelect(),
       selectedColor: checked ? Theme.of(context).colorScheme.tertiary : null,
       labelStyle: checked
-          ? TextStyle(
-              color: Theme.of(context).colorScheme.onTertiary,
-            )
+          ? TextStyle(color: Theme.of(context).colorScheme.onTertiary)
           : null,
       checkmarkColor: checked ? Theme.of(context).colorScheme.onTertiary : null,
     );
